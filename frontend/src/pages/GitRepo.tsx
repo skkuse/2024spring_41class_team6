@@ -1,10 +1,11 @@
 import Topbar from '../components/Header';
 
-function Main() {
+function GitRepo() {
   return (
     <div>
-      <h1> Main Page </h1>
+      <h1> GitRepo Page </h1>
     </div>
   );
 }
-export default Main;
+
+export default GitRepo;
