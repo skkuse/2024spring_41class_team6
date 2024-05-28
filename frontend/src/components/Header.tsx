@@ -2,6 +2,19 @@ import { ReactComponent as ELogo } from '../icons/airplane_ticket.svg';
 import Nav from './Nav';
 import styled from 'styled-components';
 
+function Header() {
+  return (
+    <HeaderContainer>
+      <Logo className="header-logo">
+        <ELogo fill="var(--primary-100)" />
+        <SiteName>Ecoder Passport</SiteName>
+      </Logo>
+      <Nav />
+    </HeaderContainer>
+  );
+}
+
+// style
 const HeaderContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -23,17 +36,4 @@ const SiteName = styled.div`
   font-weight: 500;
   font-size: 24px;
 `;
-
-function Header() {
-  return (
-    <HeaderContainer>
-      <Logo className="header-logo">
-        <ELogo fill="var(--primary-100)" />
-        <SiteName>Ecoder Passport</SiteName>
-      </Logo>
-      <Nav />
-    </HeaderContainer>
-  );
-}
-
 export default Header;
