@@ -1,10 +1,6 @@
-import Topbar from '../components/Header';
+import ExecutionResult from '../components/ExecutionResult';
 
 function Main() {
-  return (
-    <div>
-      <h1> Main Page </h1>
-    </div>
-  );
+  return <ExecutionResult />;
 }
 export default Main;

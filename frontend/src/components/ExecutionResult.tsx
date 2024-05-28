@@ -1,0 +1,80 @@
+import styled from 'styled-components';
+import PassportPage from './PassportPage';
+
+// Define the interfaces for the data
+// can be moved to a separate file or changed as needed
+type outputData = {
+  stdout: string;
+  stderr: string;
+  runtime: number;
+  cpuUsage: number;
+  cpuPower: number;
+};
+
+type comparisionData = {
+  flight: number;
+  tv: number;
+  car: number;
+  elevator: number;
+};
+
+export interface resultData {
+  Emission: number;
+  PowerConsumption: number;
+  Output: outputData;
+  Comparision: comparisionData;
+}
+
+// Define the hardcoded data
+const hardcodedResultLeft: resultData = {
+  Emission: 392.9,
+  PowerConsumption: 0.2,
+  Output: {
+    stdout: 'Hello, World!',
+    stderr: '',
+    runtime: 0.1,
+    cpuUsage: 0.1,
+    cpuPower: 0.1,
+  },
+  Comparision: {
+    flight: 0.1,
+    tv: 0.1,
+    car: 0.1,
+    elevator: 0.1,
+  },
+};
+const hardcodedResultRight: resultData = {
+  Emission: 392.9,
+  PowerConsumption: 0.2,
+  Output: {
+    stdout: 'Hello, World!\nHello, World!',
+    stderr: '',
+    runtime: 0.1,
+    cpuUsage: 0.1,
+    cpuPower: 0.1,
+  },
+  Comparision: {
+    flight: 0.1,
+    tv: 0.1,
+    car: 0.1,
+    elevator: 0.1,
+  },
+};
+
+function ExecutionResult() {
+  return (
+    <ResultWrapper>
+      <PassportPage result={hardcodedResultLeft} part="left-page" />
+      <PassportPage result={hardcodedResultRight} part="right-page" />
+    </ResultWrapper>
+  );
+}
+
+// style
+const ResultWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+`;
+
+export default ExecutionResult;
