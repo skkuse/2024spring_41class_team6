@@ -18,7 +18,7 @@ function Header() {
 const HeaderContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100vw;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   padding: 16px 48px;

@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { resultData } from './ExecutionResult';
 import Stdout from './Stdout';
+import EEIndicator from './EEIndicator';
+import ComparisionIndicator from './ComparisionIndicator';
 
 type PassportPageProps = {
   result: resultData;
@@ -12,8 +14,9 @@ function PassportPage({ result, part }: PassportPageProps) {
   const title = part === 'left-page' ? '기존 코드' : '그린화 패턴 적용 코드';
   const RuntimeInfoItem = (title: string, data: string) => {
     return (
-      <div>
-        {title}: <span style={{ color: '#5F6368' }}>{data}</span>
+      <div style={{ display: 'flex', gap: '8px' }}>
+        <span style={{ fontWeight: 500 }}>{title}:</span>
+        <span style={{ color: '#5F6368' }}>{data}</span>
       </div>
     );
   };
@@ -28,6 +31,16 @@ function PassportPage({ result, part }: PassportPageProps) {
         {RuntimeInfoItem('CPU 사용 비율', Output.cpuUsage + '%')}
         {RuntimeInfoItem('CPU 전력량', Output.cpuPower + 'W')}
       </RuntimeInfo>
+      <EEContainer>
+        <EEIndicator type="co2" usage={Emission} />
+        <EEIndicator type="energy" usage={PowerConsumption} />
+      </EEContainer>
+      <CIContainer>
+        <ComparisionIndicator type="flight" usage={Comparision.flight} />
+        <ComparisionIndicator type="tv" usage={Comparision.tv} />
+        <ComparisionIndicator type="car" usage={Comparision.car} />
+        <ComparisionIndicator type="elevator" usage={Comparision.elevator} />
+      </CIContainer>
     </Result>
   );
 }
@@ -62,7 +75,7 @@ const ResultHeader = styled.h1<{ part: string }>`
 
 const Line = styled.div<{ part: string }>`
   width: 400px;
-  height: 1px;
+  height: 0.1em;
   background-color: #5f6368;
   align-self: ${({ part }) =>
     part === 'left-page' ? 'flex-start;' : 'flex-end;'};
@@ -75,5 +88,17 @@ const RuntimeInfo = styled.div`
   gap: 16px;
   font-size: 16px;
 `;
-
+const EEContainer = styled.div`
+  display: grid;
+  width: 70%;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+`;
+const CIContainer = styled.div`
+  display: grid;
+  width: 80%;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin: 16px 0;
+`;
 export default PassportPage;

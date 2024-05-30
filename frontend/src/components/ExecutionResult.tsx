@@ -37,8 +37,8 @@ const hardcodedResultLeft: resultData = {
     cpuPower: 0.1,
   },
   Comparision: {
-    flight: 0.1,
-    tv: 0.1,
+    flight: 30.1,
+    tv: 234.1,
     car: 0.1,
     elevator: 0.1,
   },
@@ -73,8 +73,20 @@ function ExecutionResult() {
 // style
 const ResultWrapper = styled.div`
   display: grid;
+  width: 95vw;
   grid-template-columns: 1fr 1fr;
+  box-sizing: border-box;
   gap: 0;
+  overflow: hidden;
+  padding: 16px;
+
+  @media (min-width: 1280px) {
+    width: 1280px;
+  }
+
+  @media (max-width: 1030px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export default ExecutionResult;
