@@ -102,7 +102,7 @@ function JavaDiffEditor() {
 export default JavaDiffEditor;
 
 const StyledEditor = styled.div`
-  width: 85%;
+  width: 95vw;
   margin: 0 auto;
 `;
 
