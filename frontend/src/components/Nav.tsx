@@ -28,8 +28,6 @@ const StyledLink = styled(NavLink)`
 `;
 
 function Nav() {
-  const current_path = window.location.pathname;
-
   return (
     <NavContainer>
       <StyledLink
