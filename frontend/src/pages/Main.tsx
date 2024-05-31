@@ -1,4 +1,3 @@
-
 import Topbar from '../components/Header';
 import JavaDiffEditor from '../components/JavaDiffEditor';
 import JavaEditor from '../components/JavaEditor';
@@ -8,9 +7,8 @@ function Main() {
   return (
     <div>
       <JavaEditor />
-      <ExecutionResult />;
+      <ExecutionResult />
     </div>
   );
-
 }
 export default Main;
