@@ -7,7 +7,7 @@ function Header() {
     <HeaderContainer>
       <Logo className="header-logo">
         <ELogo fill="var(--primary-100)" />
-        <SiteName>Ecoder Passport</SiteName>
+        <SiteName>ECOder Passport</SiteName>
       </Logo>
       <Nav />
     </HeaderContainer>
@@ -35,5 +35,6 @@ const Logo = styled.div`
 const SiteName = styled.div`
   font-weight: 500;
   font-size: 24px;
+  font-family: 'Pacifico', cursive;
 `;
 export default Header;
