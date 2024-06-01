@@ -7,6 +7,7 @@ function Main() {
   return (
     <div>
       <JavaEditor />
+      {/* <JavaDiffEditor /> */}
       <ExecutionResult />
     </div>
   );

@@ -73,15 +73,16 @@ function ExecutionResult() {
 // style
 const ResultWrapper = styled.div`
   display: grid;
-  width: 95vw;
+  width: 85vw;
+  margin: 0 auto;
   grid-template-columns: 1fr 1fr;
   box-sizing: border-box;
   gap: 0;
   overflow: hidden;
   padding: 16px;
 
-  @media (min-width: 1280px) {
-    width: 1280px;
+  @media (max-width: 1280px) {
+    width: 95vw;
   }
 
   @media (max-width: 1030px) {
