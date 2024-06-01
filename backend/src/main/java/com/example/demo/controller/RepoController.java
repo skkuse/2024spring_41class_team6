@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RepoController {
 
-    @Autowired
-    private RepoService repoService;
+    private final RepoService repoService;
+
+    public RepoController(RepoService repoService) {
+        this.repoService = repoService;
+    }
 
     @PostMapping("repo")
     public Repo createCode(@RequestBody Repo repo) {

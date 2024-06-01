@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class RepoService {
 
-    @Autowired
-    private RepoRepository repoRepository;
+    private final RepoRepository repoRepository;
+
+    public RepoService(RepoRepository repoRepository) {
+        this.repoRepository = repoRepository;
+    }
 
     /*
      *  새로운 Repo를 저장하고 반환

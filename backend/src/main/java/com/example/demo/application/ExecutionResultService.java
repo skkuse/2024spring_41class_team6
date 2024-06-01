@@ -10,8 +10,11 @@ import java.util.Optional;
 @Service
 public class ExecutionResultService {
 
-    @Autowired
-    private ExecutionResultRepository executionResultRepository;
+    private final ExecutionResultRepository executionResultRepository;
+
+    public ExecutionResultService(ExecutionResultRepository executionResultRepository) {
+        this.executionResultRepository = executionResultRepository;
+    }
 
     /*
      *  새로운 ExecutionResult를 저장하고 반환

@@ -11,20 +11,23 @@ import java.util.Optional;
 @RestController
 public class CodeController {
 
-    @Autowired
-    private CodeService codeService;
+    private final CodeService codeService;
+
+    public CodeController (CodeService codeService) {
+        this.codeService = codeService;
+    }
 
     @PostMapping("code")
     public Code createCode(@RequestBody Code code) {
         return codeService.createCode(code);
     }
 
-    @GetMapping("/code/{code_id}")
+    @GetMapping("code/{code_id}")
     public Optional<Code> getCode(@PathVariable int code_id) {
         return codeService.findById(code_id);
     }
 
-    @GetMapping("/repo_code/{repo_id}")
+    @GetMapping("repo_code/{repo_id}")
     public List<Code> getCodesByRepoId(@PathVariable Integer repo_id) {
         return codeService.getAllCodesByRepoId(repo_id);
     }

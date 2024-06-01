@@ -10,8 +10,11 @@ import java.util.Optional;
 @Service
 public class CodeMatchService {
 
-    @Autowired
-    private CodeMatchRepository codeMatchRepository;
+    private final CodeMatchRepository codeMatchRepository;
+
+    public CodeMatchService(CodeMatchRepository codeMatchRepository) {
+        this.codeMatchRepository = codeMatchRepository;
+    }
 
     /*
      *  새로운 CodeMatch를 저장하고 반환

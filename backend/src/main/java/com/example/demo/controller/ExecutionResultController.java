@@ -11,8 +11,11 @@ import java.util.Optional;
 @RestController
 public class ExecutionResultController {
 
-    @Autowired
-    private ExecutionResultService executionResultService;
+    private final ExecutionResultService executionResultService;
+
+    public ExecutionResultController(ExecutionResultService executionResultService) {
+        this.executionResultService = executionResultService;
+    }
 
     @GetMapping("execution_result/{code_id}")
     public Optional<ExecutionResult> getExecutionResult(@PathVariable("code_id") int code_id) {

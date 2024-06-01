@@ -11,8 +11,11 @@ import java.util.Optional;
 @Service
 public class CodeService {
 
-    @Autowired
-    private CodeRepository codeRepository;
+    private final CodeRepository codeRepository;
+
+    public CodeService(CodeRepository codeRepository) {
+        this.codeRepository = codeRepository;
+    }
 
     /*
      *  새로운 Code를 저장하고 반환

@@ -12,8 +12,11 @@ import java.util.Optional;
 @RestController
 public class CodeMatchController {
 
-    @Autowired
-    private CodeMatchService codeMatchService;
+    private final CodeMatchService codeMatchService;
+
+    public CodeMatchController(CodeMatchService codeMatchService) {
+        this.codeMatchService = codeMatchService;
+    }
 
     @GetMapping("code_match/{before_id}")
     public Optional<CodeMatch> getCodeMatch(@PathVariable("before_id") int before_id) {
