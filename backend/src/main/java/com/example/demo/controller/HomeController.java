@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.application.CodeService;
 import com.example.demo.application.HomeApplicationService;
+import com.example.demo.domain.Code;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
