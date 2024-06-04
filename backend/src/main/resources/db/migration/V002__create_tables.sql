@@ -22,7 +22,7 @@ CREATE TABLE execution_result
     memory BIGINT,
     emission FLOAT,
     PRIMARY KEY (id),
-    FOREIGN KEY (code_id) REFERENCES Code (id)
+    FOREIGN KEY (code_id) REFERENCES code (id)
 );
 
 CREATE TABLE code_match
@@ -31,6 +31,6 @@ CREATE TABLE code_match
     before_id INT NOT NULL,
     after_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (before_id) REFERENCES Code (id),
-    FOREIGN KEY (after_id) REFERENCES Code (id)
+    FOREIGN KEY (before_id) REFERENCES code (id),
+    FOREIGN KEY (after_id) REFERENCES code (id)
 );
