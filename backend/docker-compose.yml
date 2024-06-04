@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  database:
+  db:
     container_name: db
-    image: mysql/mysql-server:5.7
+    image: mysql:8.0
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: db
@@ -13,13 +13,14 @@ services:
     ports:
       - "3306:3306"
     volumes:
+      - ./mysql/data:/var/lib/mysql
       - ./mysql/conf.d:/etc/mysql/conf.d
     command:
       - "mysqld"
       - "--character-set-server=utf8mb4"
       - "--collation-server=utf8mb4_unicode_ci"
 
-  application:
+  backend:
     container_name: backend
     restart: on-failure
     build:
@@ -28,8 +29,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db?useSSL=false&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "1234"
+      DB_URL: jdbc:mysql://db:3306/db?useSSL=false&allowPublicKeyRetrieval=true
+      DB_USERNAME: "root"
+      DB_PASSWORD: "1234"
     depends_on:
-      - database
+      - db
