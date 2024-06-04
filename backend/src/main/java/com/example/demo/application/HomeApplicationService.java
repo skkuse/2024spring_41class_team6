@@ -1,6 +1,6 @@
 package com.example.demo.application;
 
-import com.example.demo.domain.TestRepository;
+import com.example.demo.repository.TestRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

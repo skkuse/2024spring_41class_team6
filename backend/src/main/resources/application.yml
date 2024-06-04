@@ -17,3 +17,6 @@ spring:
   config:
     activate:
       on-profile: test
+  flyway:
+    enabled: true
+    baseline-on-migrate: false
