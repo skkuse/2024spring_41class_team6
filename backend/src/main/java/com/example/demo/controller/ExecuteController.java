@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.application.ExecuteApplicationService;
+import com.example.demo.domain.Code;
 import com.example.demo.domain.ExecutionResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,6 @@ public class ExecuteController {
 
     @GetMapping("")
     public ExecutionResult run(@RequestBody String code) {
-        return this.executeApplicationService.run(code);
+        return this.executeApplicationService.run(new Code(1, 0, code));
     }
 }

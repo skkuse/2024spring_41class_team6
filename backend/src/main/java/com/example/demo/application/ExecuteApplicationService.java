@@ -1,5 +1,6 @@
 package com.example.demo.application;
 
+import com.example.demo.domain.Code;
 import com.example.demo.domain.ExecutionResult;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,12 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class ExecuteApplicationService {
-    public ExecutionResult run(String code) {
+    public ExecutionResult run(Code code) {
         long cpu = 0, memory = 0, runtime = 0;
         try {
             Path tempDir = Files.createTempDirectory("java-code");
 
-            Path javaFile = Files.write(tempDir.resolve("Temp.java"), code.getBytes());
+            Path javaFile = Files.write(tempDir.resolve("Temp.java"), code.getCode().getBytes());
 
             ClassPathResource scriptResource = new ClassPathResource("run.sh");
             Path scriptFile = tempDir.resolve("run.sh");
@@ -55,12 +56,21 @@ public class ExecuteApplicationService {
             }
 
             process.waitFor(10, TimeUnit.SECONDS);
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return new ExecutionResult(
+                    code.getId(),
+                    "TIME_EXCEEDED",
+                    0L,
+                    0L,
+                    0
+            );
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return new ExecutionResult(
-                0,
-                "OK",
+                code.getId(),
+                "SUCCESS",
                 runtime,
                 memory,
                 0 // TODO: calculate emmision
