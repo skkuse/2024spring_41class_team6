@@ -2,11 +2,13 @@ package com.example.demo.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "execution_result")
 public class ExecutionResult {
 
@@ -28,4 +30,12 @@ public class ExecutionResult {
 
     @Column(name = "emission")
     private float emission;
+
+    public ExecutionResult(int codeId, String status, Long runtime, Long memory, float emission) {
+        this.codeId = codeId;
+        this.status = status;
+        this.runtime = runtime;
+        this.memory = memory;
+        this.emission = emission;
+    }
 }
