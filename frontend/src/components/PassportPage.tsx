@@ -71,6 +71,7 @@ const ResultHeader = styled.h1<{ part: string }>`
     part === 'left-page' ? 'flex-start;' : 'flex-end;'}
   color: ${({ part }) => (part === 'left-page' ? '#5F6368;' : '#3EAF3F;')}
   margin: 0;
+  font-size: 28px;
 `;
 
 const Line = styled.div<{ part: string }>`

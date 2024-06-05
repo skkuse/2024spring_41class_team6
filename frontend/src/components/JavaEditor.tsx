@@ -65,8 +65,12 @@ function JavaDiffEditor({ setDiffEditor }: any) {
 export default JavaDiffEditor;
 
 const StyledEditor = styled.div`
-  width: 95vw;
+  width: 85vw;
   margin: 0 auto;
+
+  @media (max-width: 1280px) {
+    width: 95vw;
+  }
 `;
 
 const StyledTopWrapper = styled.div`

@@ -2,7 +2,6 @@ import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Main from './pages/Main';
 import GitRepo from './pages/GitRepo';
-import Topbar from './components/Header';
 import Root from './pages/Root';
 
 // color palette는 index.css에 정의되어 있음
