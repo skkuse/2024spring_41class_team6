@@ -1,14 +1,34 @@
 import styled from 'styled-components';
 import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
-import { useState } from 'react';
+import sendCode from '../hooks/sendCode';
+import { useState, useRef } from 'react';
+
 // https://www.npmjs.com/package/@monaco-editor/react#installation
 
-function JavaDiffEditor() {
+function JavaDiffEditor({ setDiffEditor }: any) {
+  const editorRef = useRef<any | null>(null);
+
+  function handleEditorDidMount(editor: any, monaco: any): void {
+    editorRef.current = editor;
+  }
+
+  function onSendClick() {
+    // let returnValue: any = sendCode(editorRef.current.getValue());
+    // returnValue를 redux에 저장
+  }
+
   return (
     <StyledEditor>
       <StyledTopWrapper>
         <StyledCodeExplain>JAVA 코드만 입력해 주세요</StyledCodeExplain>
-        <StyledRunButton>제출</StyledRunButton>
+        <StyledRunButton
+          onClick={() => {
+            onSendClick();
+            setDiffEditor(true);
+          }}
+        >
+          제출
+        </StyledRunButton>
       </StyledTopWrapper>
       <div style={{ border: 'solid lightgray 1px' }}>
         <Editor
@@ -16,6 +36,7 @@ function JavaDiffEditor() {
           language="java"
           theme="light"
           loading="loading.."
+          onMount={handleEditorDidMount}
         />
       </div>
       <StyledServerInfo>
@@ -24,24 +45,23 @@ function JavaDiffEditor() {
         </StyledServerWrapper>
 
         <StyledServerWrapper>
-          <StyledServerExplainBox>
+          <StyledServerTextsWrapper>
             <StyledServerText>CPU 정보: </StyledServerText>
             <StyledServerText2>AMD 라이젠 12382X12/16코어</StyledServerText2>
-          </StyledServerExplainBox>
-          <StyledServerExplainBox>
+          </StyledServerTextsWrapper>
+          <StyledServerTextsWrapper>
             <StyledServerText>가용 메모리 크기: </StyledServerText>
             <StyledServerText2>00GB</StyledServerText2>
-          </StyledServerExplainBox>
-          <StyledServerExplainBox>
+          </StyledServerTextsWrapper>
+          <StyledServerTextsWrapper>
             <StyledServerText>데이터 센터의 에너지 효율성: </StyledServerText>
             <StyledServerText2>1.5</StyledServerText2>
-          </StyledServerExplainBox>
+          </StyledServerTextsWrapper>
         </StyledServerWrapper>
       </StyledServerInfo>
     </StyledEditor>
   );
 }
-
 export default JavaDiffEditor;
 
 const StyledEditor = styled.div`
@@ -126,10 +146,7 @@ const StyledServerWrapper = styled.div`
   height: 19px;
 `;
 
-const StyledServerExplainBox = styled.div`
-  /* Frame 20 */
-
-  /* Auto layout */
+const StyledServerTextsWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -137,5 +154,3 @@ const StyledServerExplainBox = styled.div`
   gap: 4px;
   height: 19px;
 `;
-
-// https://www.npmjs.com/package/@monaco-editor/react#installation

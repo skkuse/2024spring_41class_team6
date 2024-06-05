@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 // https://www.npmjs.com/package/@monaco-editor/react#installation
 
-function JavaDiffEditor() {
+function JavaDiffEditor({ setDiffEditor }: any) {
   const [originalJava, setOriginalJava] = useState(`import java.util.Scanner;
 
   public class SumOfTwoNumbers {
@@ -57,12 +57,18 @@ function JavaDiffEditor() {
   `);
 
   return (
-    <StyledEditor>
+    <StyledDiffEditor>
       <StyledTopWrapper>
         <StyledCodeExplain>
           기존코드/그린코드화 패턴 적용 코드
         </StyledCodeExplain>
-        <StyledRunButton>코드다시 입력하기</StyledRunButton>
+        <StyledRunButton
+          onClick={() => {
+            setDiffEditor(false);
+          }}
+        >
+          코드다시 입력하기
+        </StyledRunButton>
       </StyledTopWrapper>
       <div style={{ border: 'solid lightgray 1px' }}>
         <DiffEditor
@@ -81,27 +87,27 @@ function JavaDiffEditor() {
         </StyledServerWrapper>
 
         <StyledServerWrapper>
-          <StyledServerExplainBox>
+          <StyledServerTextsWrapper>
             <StyledServerText>CPU 정보: </StyledServerText>
             <StyledServerText2>AMD 라이젠 12382X12/16코어</StyledServerText2>
-          </StyledServerExplainBox>
-          <StyledServerExplainBox>
+          </StyledServerTextsWrapper>
+          <StyledServerTextsWrapper>
             <StyledServerText>가용 메모리 크기: </StyledServerText>
             <StyledServerText2>00GB</StyledServerText2>
-          </StyledServerExplainBox>
-          <StyledServerExplainBox>
+          </StyledServerTextsWrapper>
+          <StyledServerTextsWrapper>
             <StyledServerText>데이터 센터의 에너지 효율성: </StyledServerText>
             <StyledServerText2>1.5</StyledServerText2>
-          </StyledServerExplainBox>
+          </StyledServerTextsWrapper>
         </StyledServerWrapper>
       </StyledServerInfo>
-    </StyledEditor>
+    </StyledDiffEditor>
   );
 }
 
 export default JavaDiffEditor;
 
-const StyledEditor = styled.div`
+const StyledDiffEditor = styled.div`
   width: 85vw;
   margin: 0 auto;
 
@@ -180,7 +186,7 @@ const StyledServerWrapper = styled.div`
   height: 19px;
 `;
 
-const StyledServerExplainBox = styled.div`
+const StyledServerTextsWrapper = styled.div`
   /* Frame 20 */
 
   /* Auto layout */
