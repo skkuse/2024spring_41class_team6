@@ -1,11 +1,17 @@
 import styled from 'styled-components';
 import GitURLForm from '../components/GitURLForm';
 import LoadingAirplane from '../components/LoadingAirplane';
+import GitPRDone from '../components/GitPRDone';
 
 function GitRepo() {
   return (
     <Wrapper>
-      <GitURLForm />
+      <GitURLForm
+        onSubmit={() => {
+          console.log('hi');
+        }}
+      />
+      {/* <GitPRDone url="127.0.0.1" /> */}
     </Wrapper>
   );
 }

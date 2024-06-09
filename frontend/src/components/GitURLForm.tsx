@@ -1,7 +1,37 @@
 import styled from 'styled-components';
 import { ReactComponent as GitHubIcon } from '../icons/github-mark.svg';
+import { useEffect, useState } from 'react';
 
-function GitURLForm() {
+function GitURLForm(props: { onSubmit: () => void }) {
+  // git url을 유지하면서 auth code를 받아오기 위해 sessionStorage에 URL을 저장
+  // 더 좋은 방법이 있으면 수정해주세요.
+
+  const [gitURL, setGitURL] = useState('');
+
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get('code');
+    const gitURL = sessionStorage.getItem('gitURL');
+
+    // sessionStorage에 저장된 URL 삭제
+    sessionStorage.removeItem('gitURL');
+
+    if (code) {
+      console.log(code);
+      console.log(gitURL);
+      // 서버로 code와 gitURL을 보내고, PR 생성, response로 PR URL을 받아옴
+    }
+  }, []);
+
+  const handleClick = () => {
+    const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+    const redirectUrl =
+      `https://github.com/login/oauth/authorize?scope=public_repo&client_id=` +
+      clientId;
+
+    sessionStorage.setItem('gitURL', gitURL);
+    window.location.href = redirectUrl;
+  };
+
   return (
     <GitURLWrapper>
       <Description>
@@ -13,8 +43,15 @@ function GitURLForm() {
       </Description>
       <GitHubIcon />
       <FormWrapper>
-        <StyledInput type="url" placeholder="GitHub URL을 입력하세요" />
-        <StyledSubmitButton>제출</StyledSubmitButton>
+        <StyledInput
+          type="url"
+          placeholder="GitHub URL을 입력하세요"
+          value={gitURL}
+          onChange={(e) => {
+            setGitURL(e.target.value);
+          }}
+        />
+        <StyledButton onClick={handleClick}>제출</StyledButton>
       </FormWrapper>
     </GitURLWrapper>
   );
@@ -54,12 +91,13 @@ const StyledP = styled.p`
   color: #979797;
 `;
 
-const FormWrapper = styled.form`
+const FormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
   width: 100%;
   gap: 16px;
   align-items: center;
+  justify-content: center;
 
   @media (max-width: 700px) {
     width: 300px;
@@ -86,7 +124,8 @@ const StyledInput = styled.input`
   }
 `;
 
-const StyledSubmitButton = styled.button`
+const StyledButton = styled.button`
+  text-decoration: none;
   font-size: 16px;
   width: fit-content;
   color: white;

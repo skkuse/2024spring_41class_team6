@@ -2,7 +2,7 @@ import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Main from './pages/Main';
 import GitRepo from './pages/GitRepo';
-import Root from './pages/Root';
+import Root from './pages/Root.jsx';
 
 // color palette는 index.css에 정의되어 있음
 function App() {
