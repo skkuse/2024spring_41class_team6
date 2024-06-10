@@ -32,5 +32,7 @@ services:
       DB_URL: jdbc:mysql://db:3306/db?useSSL=false&allowPublicKeyRetrieval=true
       DB_USERNAME: "root"
       DB_PASSWORD: "1234"
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
     depends_on:
       - db
