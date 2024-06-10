@@ -6,6 +6,11 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
+oauth:
+  client:
+    id: ${GITHUB_CLIENT_ID}
+    secret: ${GITHUB_CLIENT_SECRET}
+
 ---
 
 spring:
@@ -20,3 +25,8 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: false
+
+oauth:
+  client:
+    id: 1
+    secret: 1
