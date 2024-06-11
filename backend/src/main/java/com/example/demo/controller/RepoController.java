@@ -3,12 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.application.RepoService;
 import com.example.demo.domain.Repo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("repo")
 public class RepoController {
 
     private final RepoService repoService;
@@ -17,7 +15,7 @@ public class RepoController {
         this.repoService = repoService;
     }
 
-    @PostMapping("repo")
+    @PostMapping("")
     public Repo createCode(@RequestBody Repo repo) {
         return repoService.createRepo(repo);
     }
