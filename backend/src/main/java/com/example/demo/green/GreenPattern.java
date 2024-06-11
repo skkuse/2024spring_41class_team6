@@ -73,8 +73,11 @@ public class GreenPattern {
     }
 
     private static ArrayList<String> fixNestedIfPattern(ArrayList<String> lines) {
-        boolean nestedIfFound = false;
-        int firstStartIfIndex = 0, firstEndIfIndex = 0, thirdStartIfIndex = 0, thirdEndIfIndex = 0;
+
+        boolean tripleNestedIfFound = false;
+        boolean doubleNestedIfFound = false;
+        int firstStartIfIndex = 0, firstEndIfIndex = 0, secondStartIfIndex = 0, secondEndIfIndex = 0,
+                thirdStartIfIndex = 0, thirdEndIfIndex = 0;
         String firstCondition = "", secondCondition = "", thirdCondition = "";
         int lineSize = lines.size();
 
@@ -83,7 +86,7 @@ public class GreenPattern {
         for (int i = 0; i < lineSize; i++) {
             String line = lines.get(i);
 
-            if (line.contains("if(")) {
+            if (line.contains("if(") || line.contains("if (")) {
                 Matcher matcher1 = pattern.matcher(line);
                 firstStartIfIndex = i;
 
@@ -94,7 +97,14 @@ public class GreenPattern {
                 for (int j = i + 1; j < lineSize; j++) {
                     String line2 = lines.get(j);
 
-                    if (line2.contains("if(")) {
+                    if(!doubleNestedIfFound && line2.contains("}")){
+                        doubleNestedIfFound = false;
+                        break;
+                    }
+
+                    if (line2.contains("if(") || line2.contains("if (")) {
+                        doubleNestedIfFound = true;
+                        secondStartIfIndex = j;
                         Matcher matcher2 = pattern.matcher(line2);
 
                         if (matcher2.find()) {
@@ -104,8 +114,13 @@ public class GreenPattern {
                         for (int k = j + 1; k < lineSize; k++) {
                             String line3 = lines.get(k);
 
-                            if (line3.contains("if(")) {
-                                nestedIfFound = true;
+                            if(!tripleNestedIfFound && line3.contains("}")) {
+                                tripleNestedIfFound = false;
+                                break;
+                            }
+
+                            if (line3.contains("if(") || line3.contains("if (")) {
+                                tripleNestedIfFound = true;
                                 thirdStartIfIndex = k;
 
                                 Matcher matcher3 = pattern.matcher(line3);
@@ -136,18 +151,38 @@ public class GreenPattern {
                                     }
                                 }
                             }
-                            if (thirdEndIfIndex != 0) break;
+                            if (tripleNestedIfFound) break;
+                        }
+
+                        if (!tripleNestedIfFound) {
+                            for (int k = j + 1; k < lineSize; k++) {
+                                String line3 = lines.get(k);
+                                if (line3.contains("}")) {
+                                    secondEndIfIndex = k;
+                                    break;
+                                }
+                            }
+
+                            for (int k = secondStartIfIndex + 1; k < lineSize; k++) {
+                                String line3 = lines.get(k);
+                                if (line3.contains("}")) {
+                                    firstEndIfIndex = k;
+                                    break;
+                                }
+                            }
                         }
                     }
-                    if (thirdEndIfIndex != 0) break;
+                    if (tripleNestedIfFound || doubleNestedIfFound) {
+                        break;
+                    }
                 }
-                if (nestedIfFound) {
+                if (tripleNestedIfFound || doubleNestedIfFound) {
                     break;
                 }
             }
         }
 
-        if (nestedIfFound) {
+        if (tripleNestedIfFound) {
             String conditionBody = "";
             int ifIndex = lines.get(firstStartIfIndex).indexOf("if");
             String baseIndent = (ifIndex != -1) ? lines.get(firstStartIfIndex).substring(0, ifIndex) : "";
@@ -166,8 +201,29 @@ public class GreenPattern {
 
             lines.removeIf(item -> item.equals("##MUSTDELETE##"));
         }
+        else if (doubleNestedIfFound) {
+            String conditionBody = "";
+            int ifIndex = lines.get(firstStartIfIndex).indexOf("if");
+            String baseIndent = (ifIndex != -1) ? lines.get(firstStartIfIndex).substring(0, ifIndex) : "";
 
-        return lines;
+            for (int i = secondStartIfIndex + 1; i < secondEndIfIndex; i++) {
+                conditionBody = conditionBody + (lines.get(i).trim() + "\n");
+            }
+
+            for (int i = firstStartIfIndex; i <= firstEndIfIndex; i++) {
+                lines.set(i, "##MUSTDELETE##");
+            }
+
+            lines.set(firstStartIfIndex, baseIndent + "if(" + firstCondition + " && " + secondCondition + ") {\n");
+            lines.add(firstStartIfIndex + 1, baseIndent + "\t" + conditionBody);
+
+            lines.removeIf(item -> item.equals("##MUSTDELETE##"));
+        }
+        else{
+            return lines;
+        }
+
+        return fixNestedIfPattern(lines);
     }
 
     private static ArrayList<String> fixRedundantObjectCreationPattern(ArrayList<String> lines) {

@@ -21,7 +21,21 @@ public class BuggyTest {
         if(cond1) {
             if(cond2) {
                 if(cond3) {
-                    System.out.println("Hello");
+                    System.out.println("Triple Nested Loop");
+                }
+            }
+        }
+
+        if(cond1) {
+            if (cond2) {
+                System.out.println("Double Nested Loop");
+            }
+        }
+
+        if(cond1) {
+            if(cond2) {
+                if(cond3) {
+                    System.out.println("Triple Nested Loop");
                 }
             }
         }
