@@ -2,6 +2,9 @@ package com.example.demo.application;
 
 import com.example.demo.domain.Code;
 import com.example.demo.domain.ExecutionResult;
+
+import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.TimeUnit;
-
 @Service
 public class ExecuteApplicationService {
     public ExecutionResult run(Code code) {
@@ -73,7 +75,35 @@ public class ExecuteApplicationService {
                 "SUCCESS",
                 runtime,
                 memory,
-                0 // TODO: calculate emmision
+                caculate(runtime, memory)
         );
+    }
+
+    static class Config {
+        float PUE = 1.2f;
+        int PSF = 1;
+
+        // Core i7-10700K
+        int n_CPUcores = 8;
+        float CPUpower = 15.6f;
+        int n_CPU = 1;
+
+        // W/GB
+        float MEMpower = 0.3725f;
+
+        // KR
+        float carbonIntensity = 415.6f;
+
+    }
+
+    public float caculate(long runtime, long memory) {
+        // runime(H) memory(GB)
+        Config config = new Config();
+        float CPU_consumption = config.n_CPUcores * config.CPUpower * config.n_CPU;
+        float Mem_consumption = config.MEMpower * (float) memory;
+        float totalConsumption = config.PUE * (CPU_consumption + Mem_consumption) * runtime * config.PSF;
+        float emission = totalConsumption * config.carbonIntensity;
+
+        return emission;
     }
 }
