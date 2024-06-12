@@ -44,6 +44,9 @@ public class BuggyTest {
             Random r = new Random();
             System.out.println("Hello");
         }
+
+        String str = "R";
+        String str2 = "RR";
     }
 
     public static boolean checkCond1() {

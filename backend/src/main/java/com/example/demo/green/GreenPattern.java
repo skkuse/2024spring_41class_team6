@@ -14,6 +14,7 @@ public class GreenPattern {
     private final FixNestedIfPattern fixNestedIfPattern = new FixNestedIfPattern();
     private final FixRedundantObjectCreationPattern fixRedundantObjectCreationPattern = new FixRedundantObjectCreationPattern();
     private final WrapperToPrimitivePattern wrapperToPrimitivePattern = new WrapperToPrimitivePattern();
+    private final SingleStringToCharacterPattern singleStringToCharacterPattern = new SingleStringToCharacterPattern();
 
     public String generateGreenCode(String buggyCode) {
         ArrayList<String> lines = new ArrayList<>();
@@ -26,6 +27,7 @@ public class GreenPattern {
             lines = fixArrayListSizePattern.fixArrayListSizePattern(lines);
             lines = fixNestedIfPattern.fixNestedIfPattern(lines);
             lines = fixRedundantObjectCreationPattern.fixRedundantObjectCreationPattern(lines);
+            lines = singleStringToCharacterPattern.convertSingleStringToCharacter(lines);
 
 
         } catch (Exception e) {
