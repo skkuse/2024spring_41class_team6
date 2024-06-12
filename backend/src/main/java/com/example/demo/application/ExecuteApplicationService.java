@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class ExecuteApplicationService {
     public ExecutionResult run(Code code) {
         long cpu = 0, memory = 0, runtime = 0;
+        StringBuilder output = new StringBuilder();
         try {
             Path tempDir = Files.createTempDirectory("java-code");
 
@@ -32,7 +33,6 @@ public class ExecuteApplicationService {
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
-            StringBuilder output = new StringBuilder();
             int i = 0;
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
@@ -50,8 +50,9 @@ public class ExecuteApplicationService {
                             runtime = Long.parseLong(line);
                             i++;
                             break;
+                        default:
+                            output.append(line).append("\n");
                     }
-                    output.append(line).append("\n");
                 }
             }
 
@@ -63,7 +64,8 @@ public class ExecuteApplicationService {
                     "TIME_EXCEEDED",
                     0L,
                     0L,
-                    0
+                    0,
+                    ""
             );
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,7 +75,8 @@ public class ExecuteApplicationService {
                 "SUCCESS",
                 runtime,
                 memory,
-                0 // TODO: calculate emmision
+                0, // TODO: calculate emmision,
+                output.toString()
         );
     }
 }
