@@ -105,7 +105,6 @@ async function sendCode(
     if (response.data.output.stderr) {
       return { stderr: response.data.stderr };
     } else {
-      dispatch(changeServerResponse(response.data));
       return {};
     }
   } catch (error: any) {
