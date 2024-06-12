@@ -1,20 +1,54 @@
 import styled from 'styled-components';
 import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
+import { useDispatch, useSelector } from 'react-redux';
 import sendCode from '../hooks/sendCode';
-import { useState, useRef } from 'react';
-
+import { useState, useRef, useEffect } from 'react';
+import { changeOriginalCode, changeServerResponse } from '../store';
 // https://www.npmjs.com/package/@monaco-editor/react#installation
 
-function JavaDiffEditor({ setDiffEditor }: any) {
-  const editorRef = useRef<any | null>(null);
+function JavaEditor({ setDiffEditor }: any) {
+  let dispatch = useDispatch();
 
-  function handleEditorDidMount(editor: any, monaco: any): void {
-    editorRef.current = editor;
+  const editorValueRef = useRef<string | undefined>('');
+  const [editorByte, setEditorByte] = useState<number>(0);
+  const editorKb = (editorByte / 1024).toFixed(2);
+  const [showWarning, setShowWarning] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [stderrMessage, setStderrMessage] = useState('');
+
+  function handleEditorChange(value: string | undefined, event: any) {
+    editorValueRef.current = value;
+    updateEditorByte(value);
   }
 
-  function onSendClick() {
-    // let returnValue: any = sendCode(editorRef.current.getValue());
-    // returnValue를 redux에 저장
+  const updateEditorByte = (value: string | undefined) => {
+    let byteLength = new TextEncoder().encode(value).length;
+    setEditorByte(byteLength);
+  };
+
+  async function onSendClick() {
+    if (editorByte < 64 * 1024 && editorByte > 0) {
+      try {
+        let returnValue: any = await sendCode(editorValueRef.current, dispatch);
+        if (returnValue.stderr) {
+          setHasError(true);
+          setStderrMessage(returnValue.stderr);
+        } else {
+          setHasError(false);
+          setStderrMessage('');
+          dispatch(changeOriginalCode(editorValueRef.current));
+          dispatch(changeServerResponse(returnValue));
+          dispatch;
+          setDiffEditor(true);
+        }
+      } catch (error) {
+        setHasError(true);
+        setStderrMessage('' + error);
+      }
+    } else {
+      setShowWarning(true);
+      setTimeout(() => setShowWarning(false), 4000); // Hide warning after 4 seconds
+    }
   }
 
   return (
@@ -24,23 +58,37 @@ function JavaDiffEditor({ setDiffEditor }: any) {
         <StyledRunButton
           onClick={() => {
             onSendClick();
-            setDiffEditor(true);
           }}
         >
           제출
         </StyledRunButton>
       </StyledTopWrapper>
       <div style={{ border: 'solid lightgray 1px' }}>
-        <Editor
-          height="60vh"
-          language="java"
-          theme="light"
-          loading="loading.."
-          onMount={handleEditorDidMount}
-        />
+        {hasError ? (
+          <ErrorWrapper>
+            <Editor
+              height="60vh"
+              language="java"
+              theme="light"
+              loading="loading.."
+              onChange={handleEditorChange}
+            />
+          </ErrorWrapper>
+        ) : (
+          <Editor
+            height="60vh"
+            language="java"
+            theme="light"
+            loading="loading.."
+            onChange={handleEditorChange}
+          />
+        )}
+        {hasError && <StderrMessage>{stderrMessage}</StderrMessage>}
       </div>
+
       <StyledServerInfo>
         <StyledServerWrapper>
+          <StyledServerText2>Editor: {editorKb}KB</StyledServerText2>
           <StyledServerText>서버정보</StyledServerText>
         </StyledServerWrapper>
 
@@ -59,10 +107,15 @@ function JavaDiffEditor({ setDiffEditor }: any) {
           </StyledServerTextsWrapper>
         </StyledServerWrapper>
       </StyledServerInfo>
+      {showWarning && (
+        <WarningMessage>
+          0 이상 64KB 이하의 자바코드만 입력가능합니다.
+        </WarningMessage>
+      )}
     </StyledEditor>
   );
 }
-export default JavaDiffEditor;
+export default JavaEditor;
 
 const StyledEditor = styled.div`
   width: 85vw;
@@ -153,4 +206,44 @@ const StyledServerTextsWrapper = styled.div`
   padding: 0px;
   gap: 4px;
   height: 19px;
+`;
+
+const ErrorWrapper = styled.div`
+  border: solid red 2px;
+  opacity: 0.8;
+`;
+
+const StderrMessage = styled.div`
+  color: red;
+  margin-top: 10px;
+`;
+
+const WarningMessage = styled.div`
+  background-color: #cc3300;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  animation: fadeInOut 4s ease-in-out;
+
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    10% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    90% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
 `;
