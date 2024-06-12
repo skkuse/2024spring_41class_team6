@@ -40,7 +40,7 @@ public class BuggyTest {
             }
         }
 
-        for(int i=0; i<arr.size(); i++) {
+        for(Integer i=0; i<arr.size(); i++) {
             Random r = new Random();
             System.out.println("Hello");
         }
