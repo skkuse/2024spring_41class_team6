@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StringToStringBuilder {
+public class StringToStringBuilderPattern {
 
     private final IndentCalculator indentCalculator = new IndentCalculator();
 

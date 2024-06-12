@@ -1,12 +1,7 @@
 package com.example.demo.green;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class GreenPattern {
 
@@ -15,7 +10,7 @@ public class GreenPattern {
     private final FixRedundantObjectCreationPattern fixRedundantObjectCreationPattern = new FixRedundantObjectCreationPattern();
     private final WrapperToPrimitivePattern wrapperToPrimitivePattern = new WrapperToPrimitivePattern();
     private final SingleStringToCharacterPattern singleStringToCharacterPattern = new SingleStringToCharacterPattern();
-    private final StringToStringBuilder stringToStringBuilder = new StringToStringBuilder();
+    private final StringToStringBuilderPattern stringToStringBuilder = new StringToStringBuilderPattern();
 
     public String generateGreenCode(String buggyCode) {
         ArrayList<String> lines = new ArrayList<>();
