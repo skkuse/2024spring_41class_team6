@@ -31,11 +31,15 @@ public class ExecutionResult {
     @Column(name = "emission")
     private float emission;
 
-    public ExecutionResult(int codeId, String status, Long runtime, Long memory, float emission) {
+    @Transient
+    private String output;
+
+    public ExecutionResult(int codeId, String status, Long runtime, Long memory, float emission, String output) {
         this.codeId = codeId;
         this.status = status;
         this.runtime = runtime;
         this.memory = memory;
         this.emission = emission;
+        this.output = output;
     }
 }
