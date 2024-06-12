@@ -47,6 +47,13 @@ public class BuggyTest {
 
         String str = "R";
         String str2 = "RR";
+
+        str += "A";
+        str += "AB";
+        str += "C";
+        str += "D";
+        str += "E";
+        str += "F";
     }
 
     public static boolean checkCond1() {

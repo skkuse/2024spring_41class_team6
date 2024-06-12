@@ -15,6 +15,7 @@ public class GreenPattern {
     private final FixRedundantObjectCreationPattern fixRedundantObjectCreationPattern = new FixRedundantObjectCreationPattern();
     private final WrapperToPrimitivePattern wrapperToPrimitivePattern = new WrapperToPrimitivePattern();
     private final SingleStringToCharacterPattern singleStringToCharacterPattern = new SingleStringToCharacterPattern();
+    private final StringToStringBuilder stringToStringBuilder = new StringToStringBuilder();
 
     public String generateGreenCode(String buggyCode) {
         ArrayList<String> lines = new ArrayList<>();
@@ -27,8 +28,8 @@ public class GreenPattern {
             lines = fixArrayListSizePattern.fixArrayListSizePattern(lines);
             lines = fixNestedIfPattern.fixNestedIfPattern(lines);
             lines = fixRedundantObjectCreationPattern.fixRedundantObjectCreationPattern(lines);
+            lines = stringToStringBuilder.convertStringToStringBuilder(lines);
             lines = singleStringToCharacterPattern.convertSingleStringToCharacter(lines);
-
 
         } catch (Exception e) {
             System.out.println("GreenPattern.generateGreenCode: Error\n");
