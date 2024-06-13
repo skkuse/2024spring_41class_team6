@@ -1,8 +1,11 @@
 package com.example.demo.green;
 
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@Service
 public class GreenPattern {
 
     private final FixArrayListSizePattern fixArrayListSizePattern = new FixArrayListSizePattern();
