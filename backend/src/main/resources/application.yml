@@ -11,6 +11,11 @@ oauth:
     id: ${GITHUB_CLIENT_ID}
     secret: ${GITHUB_CLIENT_SECRET}
 
+indics:
+  train_per_km: 41
+  flight_per_km: 171
+  netflix_per_h: 36
+  google_search: 10
 ---
 
 spring:
