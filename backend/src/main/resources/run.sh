@@ -43,5 +43,5 @@ duration=$((end_time - start_time))
 
 java_output=$(cat java_output.txt)
 
-#echo "$java_output"
 echo "$duration"
+echo "$java_output"
