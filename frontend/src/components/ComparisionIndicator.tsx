@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { ReactComponent as FlightIcon } from '../icons/flight.svg';
 
 type EEIndicatorProps = {
-  type: 'flight' | 'tv' | 'car' | 'elevator';
+  type: 'flight' | 'train' | 'netflix' | 'google';
   usage: number;
 };
 
@@ -11,12 +11,12 @@ function ComparisionIndicator({ type, usage }: EEIndicatorProps) {
     switch (type) {
       default:
         return { title: '비행 거리', unit: 'gCO2e/km' };
-      case 'tv':
-        return { title: 'TV', unit: 'kWh' };
-      case 'car':
-        return { title: '자동차', unit: 'kWh/km' };
-      case 'elevator':
-        return { title: '엘리베이터', unit: 'kWh/층' };
+      case 'train':
+        return { title: '기차', unit: 'kWh/km' };
+      case 'netflix':
+        return { title: '넷플릭스', unit: 'kWh' };
+      case 'google':
+        return { title: '구글 검색', unit: 'kWh' };
     }
   };
 

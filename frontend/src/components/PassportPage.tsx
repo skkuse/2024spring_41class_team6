@@ -37,9 +37,9 @@ function PassportPage({ result, part }: PassportPageProps) {
       </EEContainer>
       <CIContainer>
         <ComparisionIndicator type="flight" usage={Comparision.flight} />
-        <ComparisionIndicator type="tv" usage={Comparision.tv} />
-        <ComparisionIndicator type="car" usage={Comparision.car} />
-        <ComparisionIndicator type="elevator" usage={Comparision.elevator} />
+        <ComparisionIndicator type="train" usage={Comparision.train} />
+        <ComparisionIndicator type="netflix" usage={Comparision.netflix} />
+        <ComparisionIndicator type="google" usage={Comparision.google} />
       </CIContainer>
     </Result>
   );
