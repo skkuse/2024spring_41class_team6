@@ -1,6 +1,5 @@
 import styled, { keyframes } from 'styled-components';
 import { ReactComponent as AirplaneIcon } from '../icons/airplane.svg';
-import { transform } from 'typescript';
 
 function LoadingAirplane() {
   return (
@@ -33,6 +32,7 @@ const LoadingDotWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 16px;
+
   ${LoadingDots} {
     width: 16px;
     height: 16px;

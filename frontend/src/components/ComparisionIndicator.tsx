@@ -1,22 +1,26 @@
 import styled from 'styled-components';
 import { ReactComponent as FlightIcon } from '../icons/flight.svg';
+import { ReactComponent as TrainIcon } from '../icons/train.svg';
+import { ReactComponent as NetflixIcon } from '../icons/tv.svg';
+import { ReactComponent as GoogleIcon } from '../icons/search.svg';
+import { Component } from 'react';
 
 type EEIndicatorProps = {
-  type: 'flight' | 'tv' | 'car' | 'elevator';
+  type: 'flight' | 'train' | 'netflix' | 'google';
   usage: number;
 };
 
 function ComparisionIndicator({ type, usage }: EEIndicatorProps) {
-  const header = (type: string): { title: string; unit: string } => {
+  const header = (type: string): { title: string; unit: string; icon: any } => {
     switch (type) {
       default:
-        return { title: '비행 거리', unit: 'gCO2e/km' };
-      case 'tv':
-        return { title: 'TV', unit: 'kWh' };
-      case 'car':
-        return { title: '자동차', unit: 'kWh/km' };
-      case 'elevator':
-        return { title: '엘리베이터', unit: 'kWh/층' };
+        return { title: '비행 거리', unit: 'gCO2e/km', icon: <FlightIcon /> };
+      case 'train':
+        return { title: '기차', unit: 'kWh/km', icon: <TrainIcon /> };
+      case 'netflix':
+        return { title: '넷플릭스', unit: 'kWh', icon: <NetflixIcon /> };
+      case 'google':
+        return { title: '구글 검색', unit: 'kWh', icon: <GoogleIcon /> };
     }
   };
 
@@ -27,7 +31,7 @@ function ComparisionIndicator({ type, usage }: EEIndicatorProps) {
         <span style={{ color: '#979797' }}>{header(type).unit}</span>
       </CIHeader>
       <CIBody type={type}>
-        <FlightIcon />
+        {header(type).icon}
         {usage.toFixed(2)}
       </CIBody>
     </CIWrapper>
