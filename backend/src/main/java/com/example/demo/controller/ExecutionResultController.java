@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("execution_result")
 public class ExecutionResultController {
 
     private final ExecutionResultService executionResultService;
@@ -17,7 +18,7 @@ public class ExecutionResultController {
         this.executionResultService = executionResultService;
     }
 
-    @GetMapping("execution_result/{code_id}")
+    @GetMapping("{code_id}")
     public Optional<ExecutionResult> getExecutionResult(@PathVariable("code_id") int code_id) {
         return executionResultService.findByCodeId(code_id);
     }

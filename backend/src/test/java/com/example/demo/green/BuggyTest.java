@@ -21,15 +21,39 @@ public class BuggyTest {
         if(cond1) {
             if(cond2) {
                 if(cond3) {
-                    System.out.println("Hello");
+                    System.out.println("Triple Nested Loop");
                 }
             }
         }
 
-        for(int i=0; i<arr.size(); i++) {
+        if(cond1) {
+            if (cond2) {
+                System.out.println("Double Nested Loop");
+            }
+        }
+
+        if(cond1) {
+            if(cond2) {
+                if(cond3) {
+                    System.out.println("Triple Nested Loop");
+                }
+            }
+        }
+
+        for(Integer i=0; i<arr.size(); i++) {
             Random r = new Random();
             System.out.println("Hello");
         }
+
+        String str = "R";
+        String str2 = "RR";
+
+        str += "A";
+        str += "AB";
+        str += "C";
+        str += "D";
+        str += "E";
+        str += "F";
     }
 
     public static boolean checkCond1() {
