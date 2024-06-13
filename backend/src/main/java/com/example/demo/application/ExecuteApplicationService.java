@@ -15,15 +15,35 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Service
 public class ExecuteApplicationService {
+
+    private static String detectClassName(String content) {
+        Pattern pattern = Pattern.compile("\\bclass\\s+(\\w+)");
+        Matcher matcher = pattern.matcher(content);
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+
+        return null;
+    }
+
     public ExecutionResult run(Code code) {
-        long cpu = 0, memory = 0, runtime = 0;
+        double cpu = 0;
+        long memory = 0, runtime = 0;
         StringBuilder output = new StringBuilder();
         try {
             Path tempDir = Files.createTempDirectory("java-code");
 
-            Path javaFile = Files.write(tempDir.resolve("Temp.java"), code.getCode().getBytes());
+            String content = new String(code.getCode().getBytes());
+
+            Files.write(
+                    tempDir.resolve("Temp.java"),
+                    content.replaceAll("\\bclass\\s+" + detectClassName(content) + "\\b", "class Temp").getBytes());
 
             ClassPathResource scriptResource = new ClassPathResource("run.sh");
             Path scriptFile = tempDir.resolve("run.sh");
@@ -41,7 +61,7 @@ public class ExecuteApplicationService {
                 while ((line = reader.readLine()) != null) {
                     switch (i) {
                         case 0:
-                            cpu = Long.parseLong(line);
+                            cpu = Double.parseDouble(line);
                             i++;
                             break;
                         case 1:
