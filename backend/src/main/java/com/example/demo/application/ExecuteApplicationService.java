@@ -121,10 +121,12 @@ public class ExecuteApplicationService {
 
     public float caculate(long runtime, long memory) {
         // runime(H) memory(GB)
+        float runtimeH = (float) runtime/3600000;
+        float memGB = (float) memory/1073741824L;
         Config config = new Config();
         float CPU_consumption = config.n_CPUcores * config.CPUpower * config.n_CPU;
-        float Mem_consumption = config.MEMpower * (float) memory;
-        float totalConsumption = config.PUE * (CPU_consumption + Mem_consumption) * runtime * config.PSF;
+        float Mem_consumption = config.MEMpower * memGB;
+        float totalConsumption = config.PUE * (CPU_consumption + Mem_consumption) * runtimeH * config.PSF;
         float emission = totalConsumption * config.carbonIntensity;
 
         return emission;
