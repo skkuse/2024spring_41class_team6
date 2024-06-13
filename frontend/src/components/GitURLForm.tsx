@@ -27,7 +27,6 @@ function GitURLForm() {
     sessionStorage.setItem('gitURL', gitURL);
     window.location.href = redirectUrl;
   };
-
   return (
     <GitURLWrapper>
       <Description>
@@ -89,6 +88,7 @@ const StyledP = styled.p`
   color: #979797;
 `;
 
+
 const FormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
@@ -133,6 +133,7 @@ const StyledButton = styled.button`
   border: none;
 `;
 
+
 const WarningMessage = styled.div`
   background-color: #cc3300;
   color: white;
@@ -162,5 +163,4 @@ const WarningMessage = styled.div`
     }
   }
 `;
-
 export default GitURLForm;

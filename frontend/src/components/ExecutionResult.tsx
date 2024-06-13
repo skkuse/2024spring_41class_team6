@@ -13,6 +13,7 @@ type outputData = {
 
 type comparisionData = {
   flight: number;
+
   train: number;
   netflix: number;
   google: number;

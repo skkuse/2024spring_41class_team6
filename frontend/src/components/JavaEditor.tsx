@@ -64,12 +64,14 @@ function JavaEditor({ setDiffEditor }: any) {
         <StyledRunButton
           onClick={() => {
             onSendClick();
+            setDiffEditor(true);
           }}
         >
           제출
         </StyledRunButton>
       </StyledTopWrapper>
       <div style={{ border: 'solid lightgray 1px' }}>
+
         {hasError ? (
           <ErrorWrapper>
             <Editor

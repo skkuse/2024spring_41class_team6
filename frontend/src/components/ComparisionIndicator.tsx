@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as FlightIcon } from '../icons/flight.svg';
+
 import { ReactComponent as TrainIcon } from '../icons/train.svg';
 import { ReactComponent as NetflixIcon } from '../icons/tv.svg';
 import { ReactComponent as GoogleIcon } from '../icons/search.svg';
@@ -21,6 +22,7 @@ function ComparisionIndicator({ type, usage }: EEIndicatorProps) {
         return { title: '넷플릭스', unit: 'kWh', icon: <NetflixIcon /> };
       case 'google':
         return { title: '구글 검색', unit: 'kWh', icon: <GoogleIcon /> };
+
     }
   };
 

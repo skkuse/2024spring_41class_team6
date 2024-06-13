@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: demo6
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+oauth:
+  client:
+    id: ${GITHUB_CLIENT_ID}
+    secret: ${GITHUB_CLIENT_SECRET}
+
+indics:
+  train_per_km: 41
+  flight_per_km: 171
+  netflix_per_h: 36
+  google_search: 10
+---
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test;MODE=MYSQL
+    username: user
+    password: 1234
+  config:
+    activate:
+      on-profile: test
+  flyway:
+    enabled: true
+    baseline-on-migrate: false
+
+oauth:
+  client:
+    id: 1
+    secret: 1
