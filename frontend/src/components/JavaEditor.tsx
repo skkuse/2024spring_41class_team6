@@ -4,11 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import sendCode from '../hooks/sendCode';
 import { useState, useRef, useEffect } from 'react';
 import { changeOriginalCode, changeServerResponse } from '../store';
+import LoadingAirplane from '../components/LoadingAirplane';
 // https://www.npmjs.com/package/@monaco-editor/react#installation
 
 function JavaEditor({ setDiffEditor }: any) {
   let dispatch = useDispatch();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const editorValueRef = useRef<string | undefined>('');
   const [editorByte, setEditorByte] = useState<number>(0);
   const editorKb = (editorByte / 1024).toFixed(2);
@@ -29,6 +31,7 @@ function JavaEditor({ setDiffEditor }: any) {
   async function onSendClick() {
     if (editorByte < 64 * 1024 && editorByte > 0) {
       try {
+        setIsLoading(true);
         let returnValue: any = await sendCode(editorValueRef.current, dispatch);
         if (returnValue.stderr) {
           setHasError(true);
@@ -41,6 +44,7 @@ function JavaEditor({ setDiffEditor }: any) {
           dispatch;
           setDiffEditor(true);
         }
+        setIsLoading(false);
       } catch (error) {
         setHasError(true);
         setStderrMessage('' + error);
@@ -50,7 +54,9 @@ function JavaEditor({ setDiffEditor }: any) {
       setTimeout(() => setShowWarning(false), 4000); // Hide warning after 4 seconds
     }
   }
-
+  if (isLoading) {
+    return <LoadingAirplane />;
+  }
   return (
     <StyledEditor>
       <StyledTopWrapper>
@@ -75,13 +81,15 @@ function JavaEditor({ setDiffEditor }: any) {
             />
           </ErrorWrapper>
         ) : (
-          <Editor
-            height="60vh"
-            language="java"
-            theme="light"
-            loading="loading.."
-            onChange={handleEditorChange}
-          />
+          <div>
+            <Editor
+              height="60vh"
+              language="java"
+              theme="light"
+              loading="loading.."
+              onChange={handleEditorChange}
+            />
+          </div>
         )}
         {hasError && <StderrMessage>{stderrMessage}</StderrMessage>}
       </div>
