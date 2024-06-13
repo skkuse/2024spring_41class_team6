@@ -13,9 +13,10 @@ type outputData = {
 
 type comparisionData = {
   flight: number;
-  tv: number;
-  car: number;
-  elevator: number;
+
+  train: number;
+  netflix: number;
+  google: number;
 };
 
 export interface resultData {
@@ -38,9 +39,9 @@ const hardcodedResultLeft: resultData = {
   },
   Comparision: {
     flight: 30.1,
-    tv: 234.1,
-    car: 0.1,
-    elevator: 0.1,
+    train: 234.1,
+    netflix: 0.1,
+    google: 0.1,
   },
 };
 const hardcodedResultRight: resultData = {
@@ -55,9 +56,9 @@ const hardcodedResultRight: resultData = {
   },
   Comparision: {
     flight: 0.1,
-    tv: 0.1,
-    car: 0.1,
-    elevator: 0.1,
+    train: 0.1,
+    netflix: 0.1,
+    google: 0.1,
   },
 };
 

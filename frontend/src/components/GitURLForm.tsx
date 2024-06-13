@@ -1,7 +1,32 @@
 import styled from 'styled-components';
 import { ReactComponent as GitHubIcon } from '../icons/github-mark.svg';
+import { useEffect, useState } from 'react';
 
 function GitURLForm() {
+  // git url을 유지하면서 auth code를 받아오기 위해 sessionStorage에 URL을 저장
+  // 더 좋은 방법이 있으면 수정해주세요.
+
+  const [gitURL, setGitURL] = useState('');
+  const [showWarning, setShowWarning] = useState(false);
+
+  const handleClick = () => {
+    // gitURL이 비어있으면 경고 메시지 출력
+    if (!gitURL) {
+      setShowWarning(true);
+      setTimeout(() => {
+        setShowWarning(false);
+      }, 4000);
+      return;
+    }
+
+    const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+    const redirectUrl =
+      `https://github.com/login/oauth/authorize?scope=public_repo&client_id=` +
+      clientId;
+
+    sessionStorage.setItem('gitURL', gitURL);
+    window.location.href = redirectUrl;
+  };
   return (
     <GitURLWrapper>
       <Description>
@@ -13,9 +38,19 @@ function GitURLForm() {
       </Description>
       <GitHubIcon />
       <FormWrapper>
-        <StyledInput type="url" placeholder="GitHub URL을 입력하세요" />
-        <StyledSubmitButton>제출</StyledSubmitButton>
+        <StyledInput
+          type="url"
+          placeholder="GitHub URL을 입력하세요"
+          value={gitURL}
+          onChange={(e) => {
+            setGitURL(e.target.value);
+          }}
+        />
+        <StyledButton onClick={handleClick}>제출</StyledButton>
       </FormWrapper>
+      {showWarning && (
+        <WarningMessage>Github repositorhy URL을 입력해주세요.</WarningMessage>
+      )}
     </GitURLWrapper>
   );
 }
@@ -29,7 +64,6 @@ const GitURLWrapper = styled.div`
   background: #f1f1f1;
   padding: 32px 48px;
   border-radius: 16px;
-  margin-top: 128px;
 `;
 
 const StyledH1 = styled.h1`
@@ -54,12 +88,14 @@ const StyledP = styled.p`
   color: #979797;
 `;
 
-const FormWrapper = styled.form`
+
+const FormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
   width: 100%;
   gap: 16px;
   align-items: center;
+  justify-content: center;
 
   @media (max-width: 700px) {
     width: 300px;
@@ -86,7 +122,8 @@ const StyledInput = styled.input`
   }
 `;
 
-const StyledSubmitButton = styled.button`
+const StyledButton = styled.button`
+  text-decoration: none;
   font-size: 16px;
   width: fit-content;
   color: white;
@@ -96,4 +133,34 @@ const StyledSubmitButton = styled.button`
   border: none;
 `;
 
+
+const WarningMessage = styled.div`
+  background-color: #cc3300;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  animation: fadeInOut 4s ease-in-out;
+
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    10% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    90% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
+`;
 export default GitURLForm;

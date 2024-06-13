@@ -2,59 +2,16 @@ import styled from 'styled-components';
 import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
 import { useState } from 'react';
 
+import { useSelector } from 'react-redux';
 // https://www.npmjs.com/package/@monaco-editor/react#installation
 
 function JavaDiffEditor({ setDiffEditor }: any) {
-  const [originalJava, setOriginalJava] = useState(`import java.util.Scanner;
-
-  public class SumOfTwoNumbers {
-      public static void main(String[] args) {
-          Scanner scanner = new Scanner(System.in);
-  
-          // Prompt the user to enter the first number
-          System.out.print("Enter the first number: ");
-          int num1 = scanner.nextInt();
-  
-          // Prompt the user to enter the second number
-          System.out.print("Enter the second number: ");
-          int num2 = scanner.nextInt();
-  
-          // Calculate the sum of the two numbers
-          int sum = num1 + num2;
-  
-          // Display the result
-          System.out.println("The sum of " + num1 + " and " + num2 + " is " + sum);
-          
-          // Close the scanner
-          scanner.close();
-      }
-  }
-  `);
-  const [greenJava, setGreenJava] = useState(`import java.util.Scanner;
-
-  public class ProductOfTwoNumbers {
-      public static void main(String[] args) {
-          Scanner scanner = new Scanner(System.in);
-  
-          // Prompt the user to enter the first number
-          System.out.print("Enter the first number: ");
-          int num1 = scanner.nextInt();
-  
-          // Prompt the user to enter the second number
-          System.out.print("Enter the second number: ");
-          int num2 = scanner.nextInt();
-  
-          // Calculate the product of the two numbers
-          int product = num1 * num2;
-  
-          // Display the result
-          System.out.println("The product of " + num1 + " and " + num2 + " is " + product);
-          
-          // Close the scanner
-          scanner.close();
-      }
-  }
-  `);
+  let originalCode = useSelector((state: any) => {
+    return state.originalCode.javaCode;
+  });
+  let greenCode = useSelector((state: any) => {
+    return state.serverResponse.greenCode;
+  });
 
   return (
     <StyledDiffEditor>
@@ -74,8 +31,8 @@ function JavaDiffEditor({ setDiffEditor }: any) {
         <DiffEditor
           height="60vh"
           language="java"
-          original={originalJava}
-          modified={greenJava}
+          original={originalCode}
+          modified={greenCode}
           theme="light"
           loading="loading.."
         />
