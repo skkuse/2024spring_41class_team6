@@ -1,6 +1,5 @@
 import { Link, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-// import './Nav.css';
 
 const NavContainer = styled.div`
   display: flex;

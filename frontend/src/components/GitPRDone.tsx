@@ -37,7 +37,6 @@ const PRWrapper = styled.div`
   background: #f1f1f1;
   border-radius: 16px;
   padding: 32px 48px;
-  margin-top: 128px;
 `;
 
 const StlyedLink = styled(Link)`

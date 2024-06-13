@@ -2,27 +2,23 @@ import styled from 'styled-components';
 import { ReactComponent as GitHubIcon } from '../icons/github-mark.svg';
 import { useEffect, useState } from 'react';
 
-function GitURLForm(props: { onSubmit: () => void }) {
+function GitURLForm() {
   // git url을 유지하면서 auth code를 받아오기 위해 sessionStorage에 URL을 저장
   // 더 좋은 방법이 있으면 수정해주세요.
 
   const [gitURL, setGitURL] = useState('');
-
-  useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get('code');
-    const gitURL = sessionStorage.getItem('gitURL');
-
-    // sessionStorage에 저장된 URL 삭제
-    sessionStorage.removeItem('gitURL');
-
-    if (code) {
-      console.log(code);
-      console.log(gitURL);
-      // 서버로 code와 gitURL을 보내고, PR 생성, response로 PR URL을 받아옴
-    }
-  }, []);
+  const [showWarning, setShowWarning] = useState(false);
 
   const handleClick = () => {
+    // gitURL이 비어있으면 경고 메시지 출력
+    if (!gitURL) {
+      setShowWarning(true);
+      setTimeout(() => {
+        setShowWarning(false);
+      }, 4000);
+      return;
+    }
+
     const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
     const redirectUrl =
       `https://github.com/login/oauth/authorize?scope=public_repo&client_id=` +
@@ -53,6 +49,9 @@ function GitURLForm(props: { onSubmit: () => void }) {
         />
         <StyledButton onClick={handleClick}>제출</StyledButton>
       </FormWrapper>
+      {showWarning && (
+        <WarningMessage>Github repositorhy URL을 입력해주세요.</WarningMessage>
+      )}
     </GitURLWrapper>
   );
 }
@@ -66,7 +65,6 @@ const GitURLWrapper = styled.div`
   background: #f1f1f1;
   padding: 32px 48px;
   border-radius: 16px;
-  margin-top: 128px;
 `;
 
 const StyledH1 = styled.h1`
@@ -133,6 +131,36 @@ const StyledButton = styled.button`
   background: var(--primary-100);
   border-radius: 8px;
   border: none;
+`;
+
+const WarningMessage = styled.div`
+  background-color: #cc3300;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  animation: fadeInOut 4s ease-in-out;
+
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    10% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    90% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
 `;
 
 export default GitURLForm;
