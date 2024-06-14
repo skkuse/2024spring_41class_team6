@@ -14,6 +14,9 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,6 +35,7 @@ public class ExecuteApplicationService {
     public ExecuteApplicationService() {
         PUE = 1.2f;
         PSF = 1;
+        new StringBuilder().toString()
 
         n_CPUcores = 16;
         CPUpower = 6.6f;
@@ -62,6 +66,19 @@ public class ExecuteApplicationService {
 
             String content = new String(code.getCode().getBytes());
 
+            Set<PosixFilePermission> perms = new HashSet<>();
+            perms.add(PosixFilePermission.OWNER_READ);
+            perms.add(PosixFilePermission.OWNER_WRITE);
+            perms.add(PosixFilePermission.OWNER_EXECUTE);
+
+            perms.add(PosixFilePermission.OTHERS_READ);
+            perms.add(PosixFilePermission.OTHERS_WRITE);
+            perms.add(PosixFilePermission.OTHERS_EXECUTE);
+
+            perms.add(PosixFilePermission.GROUP_READ);
+            perms.add(PosixFilePermission.GROUP_WRITE);
+            perms.add(PosixFilePermission.GROUP_EXECUTE);
+
             Files.write(
                     tempDir.resolve("Temp.java"),
                     content.replaceAll("\\bclass\\s+" + detectClassName(content) + "\\b", "class Temp").getBytes());
@@ -70,6 +87,8 @@ public class ExecuteApplicationService {
             Path scriptFile = tempDir.resolve("run.sh");
             Files.copy(scriptResource.getInputStream(), scriptFile, StandardCopyOption.REPLACE_EXISTING);
 
+            Files.setPosixFilePermissions(scriptFile, perms);
+            Files.setPosixFilePermissions(tempDir.resolve("Temp.java"), perms);
             scriptFile.toFile().setExecutable(true);
 
             ProcessBuilder processBuilder = new ProcessBuilder(scriptFile.toString()).directory(tempDir.toFile());
@@ -112,6 +131,14 @@ public class ExecuteApplicationService {
             );
         } catch (IOException e) {
             e.printStackTrace();
+            return new ExecutionResult(
+                    code.getId(),
+                    "TIME_EXCEEDED",
+                    0L,
+                    0L,
+                    0,
+                    ""
+            );
         }
         return new ExecutionResult(
                 code.getId(),
