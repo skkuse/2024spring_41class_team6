@@ -19,7 +19,7 @@ public class CodeEditorController {
         this.codeEditorService = codeEditorService;
     }
 
-    @GetMapping("")
+    @PostMapping("")
     public CodeEditorResult getResult(@RequestBody CodeEditorRequest request) {
         return codeEditorService.process(request.getCode());
     }
