@@ -125,7 +125,7 @@ public class ExecuteApplicationService {
 
     public float caculate(long runtime, long memory) {
         // runime(H) memory(GB)
-        float runtimeH = (float) runtime/3600000;
+        float runtimeH = (float) runtime/3600000/1000000;
         float memGB = (float) memory/1073741824L;
         float CPU_consumption = this.n_CPUcores * this.CPUpower * this.n_CPU;
         float Mem_consumption = this.MEMpower * memGB;
