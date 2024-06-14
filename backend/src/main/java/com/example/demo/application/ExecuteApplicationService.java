@@ -21,6 +21,27 @@ import java.util.regex.Pattern;
 @Service
 public class ExecuteApplicationService {
 
+    private float PUE;
+    private int PSF;
+    private int n_CPUcores;
+    private float CPUpower;
+    private int n_CPU;
+    private float MEMpower;
+    private float carbonIntensity;
+
+    public ExecuteApplicationService() {
+        PUE = 1.2f;
+        PSF = 1;
+
+        n_CPUcores = 8;
+        CPUpower = 15.6f;
+        n_CPU = 1;
+
+        // W/GB
+        MEMpower = 0.3725f;
+        carbonIntensity = 415.6f;
+    }
+
     private static String detectClassName(String content) {
         Pattern pattern = Pattern.compile("\\bclass\\s+(\\w+)");
         Matcher matcher = pattern.matcher(content);
@@ -102,32 +123,14 @@ public class ExecuteApplicationService {
         );
     }
 
-    static class Config {
-        float PUE = 1.2f;
-        int PSF = 1;
-
-        // Core i7-10700K
-        int n_CPUcores = 8;
-        float CPUpower = 15.6f;
-        int n_CPU = 1;
-
-        // W/GB
-        float MEMpower = 0.3725f;
-
-        // KR
-        float carbonIntensity = 415.6f;
-
-    }
-
     public float caculate(long runtime, long memory) {
         // runime(H) memory(GB)
         float runtimeH = (float) runtime/3600000;
         float memGB = (float) memory/1073741824L;
-        Config config = new Config();
-        float CPU_consumption = config.n_CPUcores * config.CPUpower * config.n_CPU;
-        float Mem_consumption = config.MEMpower * memGB;
-        float totalConsumption = config.PUE * (CPU_consumption + Mem_consumption) * runtimeH * config.PSF;
-        float emission = totalConsumption * config.carbonIntensity;
+        float CPU_consumption = this.n_CPUcores * this.CPUpower * this.n_CPU;
+        float Mem_consumption = this.MEMpower * memGB;
+        float totalConsumption = this.PUE * (CPU_consumption + Mem_consumption) * runtimeH * this.PSF / 1000;
+        float emission = totalConsumption * this.carbonIntensity;
 
         return emission;
     }
