@@ -1,8 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.application.CodeEditorRequest;
 import com.example.demo.application.CodeEditorService;
 import com.example.demo.domain.Code;
 import com.example.demo.domain.CodeEditorResult;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +20,8 @@ public class CodeEditorController {
     }
 
     @GetMapping("")
-    public CodeEditorResult getResult(@RequestBody String code) {
-        return codeEditorService.process(code);
+    public CodeEditorResult getResult(@RequestBody CodeEditorRequest request) {
+        return codeEditorService.process(request.getCode());
     }
 
 }
