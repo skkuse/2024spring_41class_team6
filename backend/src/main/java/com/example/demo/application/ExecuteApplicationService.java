@@ -33,8 +33,8 @@ public class ExecuteApplicationService {
         PUE = 1.2f;
         PSF = 1;
 
-        n_CPUcores = 8;
-        CPUpower = 15.6f;
+        n_CPUcores = 16;
+        CPUpower = 6.6f;
         n_CPU = 1;
 
         // W/GB
