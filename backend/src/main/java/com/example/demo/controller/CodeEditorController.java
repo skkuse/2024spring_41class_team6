@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("code_editor")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CodeEditorController {
 
     private final CodeEditorService codeEditorService;
