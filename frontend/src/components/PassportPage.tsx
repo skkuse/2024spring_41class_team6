@@ -1,16 +1,16 @@
 import styled from 'styled-components';
-import { resultData } from './ExecutionResult';
+import { resultData, comparisionData } from './ExecutionResult';
 import Stdout from './Stdout';
 import EEIndicator from './EEIndicator';
 import ComparisionIndicator from './ComparisionIndicator';
 
 type PassportPageProps = {
+  comparision: comparisionData;
   result: resultData;
   part: 'left-page' | 'right-page';
 };
 
-function PassportPage({ result, part }: PassportPageProps) {
-  const { Emission, PowerConsumption, Output, Comparision } = result;
+function PassportPage({ comparision, result, part }: PassportPageProps) {
   const title = part === 'left-page' ? '기존 코드' : '그린화 패턴 적용 코드';
   const RuntimeInfoItem = (title: string, data: string) => {
     return (
@@ -25,21 +25,21 @@ function PassportPage({ result, part }: PassportPageProps) {
     <Result className={part}>
       <ResultHeader part={part}>{title}</ResultHeader>
       <Line part={part} />
-      <Stdout part={part} stdout={Output.stdout} />
+      <Stdout part={part} stdout={result.output} />
       <RuntimeInfo>
-        {RuntimeInfoItem('실행 시간', Output.runtime + 's')}
-        {RuntimeInfoItem('CPU 사용 비율', Output.cpuUsage + '%')}
-        {RuntimeInfoItem('CPU 전력량', Output.cpuPower + 'W')}
+        {RuntimeInfoItem('실행 시간', result.runtime + 's')}
+        {RuntimeInfoItem('CPU 사용 비율', result.memory + '%')}
+        {RuntimeInfoItem('CPU 전력량', result.memory + 'W')}
       </RuntimeInfo>
       <EEContainer>
-        <EEIndicator type="co2" usage={Emission} />
-        <EEIndicator type="energy" usage={PowerConsumption} />
+        <EEIndicator type="co2" usage={result.emission} />
+        <EEIndicator type="energy" usage={result.emission} />
       </EEContainer>
       <CIContainer>
-        <ComparisionIndicator type="flight" usage={Comparision.flight} />
-        <ComparisionIndicator type="train" usage={Comparision.train} />
-        <ComparisionIndicator type="netflix" usage={Comparision.netflix} />
-        <ComparisionIndicator type="google" usage={Comparision.google} />
+        <ComparisionIndicator type="flight" usage={comparision.flight} />
+        <ComparisionIndicator type="train" usage={comparision.train} />
+        <ComparisionIndicator type="netflix" usage={comparision.netflix} />
+        <ComparisionIndicator type="google" usage={comparision.google} />
       </CIContainer>
     </Result>
   );
