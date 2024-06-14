@@ -35,7 +35,6 @@ public class ExecuteApplicationService {
     public ExecuteApplicationService() {
         PUE = 1.2f;
         PSF = 1;
-        new StringBuilder().toString()
 
         n_CPUcores = 16;
         CPUpower = 6.6f;
@@ -91,7 +90,7 @@ public class ExecuteApplicationService {
             Files.setPosixFilePermissions(tempDir.resolve("Temp.java"), perms);
             scriptFile.toFile().setExecutable(true);
 
-            ProcessBuilder processBuilder = new ProcessBuilder(scriptFile.toString()).directory(tempDir.toFile());
+            ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", scriptFile.toString()).directory(tempDir.toFile());
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
