@@ -46,7 +46,7 @@ function JavaDiffEditor({ setDiffEditor }: any) {
         <StyledServerWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>CPU 정보: </StyledServerText>
-            <StyledServerText2>AMD 라이젠 12382X12/16코어</StyledServerText2>
+            <StyledServerText2>AMD Ryzen 9 3950X/16코어</StyledServerText2>
           </StyledServerTextsWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>가용 메모리 크기: </StyledServerText>
