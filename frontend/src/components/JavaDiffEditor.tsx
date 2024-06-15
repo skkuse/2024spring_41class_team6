@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
 import { useState } from 'react';
-
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeOriginalCode } from '../store';
 // https://www.npmjs.com/package/@monaco-editor/react#installation
 
-function JavaDiffEditor({ setDiffEditor }: any) {
+function JavaDiffEditor({ setIsDiffEditor }: any) {
+  let dispatch = useDispatch();
   let originalCode = useSelector((state: any) => {
     return state.originalCode.javaCode;
   });
@@ -22,7 +23,8 @@ function JavaDiffEditor({ setDiffEditor }: any) {
         </StyledCodeExplain>
         <StyledRunButton
           onClick={() => {
-            setDiffEditor(false);
+            dispatch(changeOriginalCode(''));
+            dispatch(setIsDiffEditor(false));
           }}
         >
           코드다시 입력하기

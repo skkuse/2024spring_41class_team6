@@ -1,5 +1,19 @@
 import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+// Main
+let isDiffEditor = createSlice({
+  name: 'isDiffEditor',
+  initialState: false,
+  reducers: {
+    setIsDiffEditor(state: any, action: PayloadAction<any>): any {
+      return action.payload;
+    },
+  },
+});
+export const { setIsDiffEditor } = isDiffEditor.actions;
+
+// JavaEditor
+
 export interface ResponseType {
   greenCode: string;
   beforeExecutionResult: {
@@ -72,6 +86,7 @@ export default configureStore({
   reducer: {
     serverResponse: serverResponse.reducer,
     originalCode: originalCode.reducer,
+    isDiffEditor: isDiffEditor.reducer,
   },
 });
 
