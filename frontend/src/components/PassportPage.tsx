@@ -93,7 +93,7 @@ const RuntimeInfo = styled.div`
 `;
 const EEContainer = styled.div`
   display: grid;
-  width: 70%;
+  width: 85%;
   grid-template-columns: repeat(2, 1fr);
   gap: 32px;
 `;
