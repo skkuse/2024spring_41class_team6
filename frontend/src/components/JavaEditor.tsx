@@ -32,7 +32,7 @@ function JavaEditor({ setDiffEditor }: any) {
     if (editorByte < 64 * 1024 && editorByte > 0) {
       try {
         setIsLoading(true);
-        let returnValue: any = await sendCode(editorValueRef.current, dispatch);
+        let returnValue: any = await sendCode(editorValueRef.current);
         if (returnValue.stderr) {
           setHasError(true);
           setStderrMessage(returnValue.stderr);
@@ -41,7 +41,6 @@ function JavaEditor({ setDiffEditor }: any) {
           setStderrMessage('');
           dispatch(changeOriginalCode(editorValueRef.current));
           dispatch(changeServerResponse(returnValue));
-          dispatch;
           setDiffEditor(true);
         }
         setIsLoading(false);

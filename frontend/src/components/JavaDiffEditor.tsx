@@ -12,6 +12,7 @@ function JavaDiffEditor({ setDiffEditor }: any) {
   let greenCode = useSelector((state: any) => {
     return state.serverResponse.greenCode;
   });
+  // console.log('greenCode', greenCode);
 
   return (
     <StyledDiffEditor>

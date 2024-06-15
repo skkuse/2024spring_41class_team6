@@ -22,7 +22,6 @@ function ComparisionIndicator({ type, usage }: EEIndicatorProps) {
         return { title: '넷플릭스', unit: 'kWh', icon: <NetflixIcon /> };
       case 'google':
         return { title: '구글 검색', unit: 'kWh', icon: <GoogleIcon /> };
-
     }
   };
 
@@ -34,7 +33,8 @@ function ComparisionIndicator({ type, usage }: EEIndicatorProps) {
       </CIHeader>
       <CIBody type={type}>
         {header(type).icon}
-        {usage.toFixed(2)}
+        {/* {usage.toFixed(2)} */}
+        {usage.toFixed(7)}
       </CIBody>
     </CIWrapper>
   );
