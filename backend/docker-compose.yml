@@ -10,7 +10,6 @@ services:
       MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD: 1234
       TZ: 'Asia/Seoul'
-    mem_limit: 512m
     volumes:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/conf.d:/etc/mysql/conf.d
@@ -27,7 +26,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    mem_limit: 256m
     environment:
       DB_URL: jdbc:mysql://db:3306/db?useSSL=false&allowPublicKeyRetrieval=true
       DB_USERNAME: "root"
