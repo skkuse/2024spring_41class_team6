@@ -26,6 +26,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    mem_limit: 512m
     environment:
       DB_URL: jdbc:mysql://db:3306/db?useSSL=false&allowPublicKeyRetrieval=true
       DB_USERNAME: "root"
