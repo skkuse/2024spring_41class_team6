@@ -22,6 +22,19 @@ function PassportPage({ result, part }: PassportPageProps) {
     );
   };
 
+  // float CPU_consumption = this.n_CPUcores * this.CPUpower * this.n_CPU
+  // float Mem_consumption = this.MEMpower * memGB;
+  // float runtimeH = (float) runtime/3600000/1000000;
+  // float memGB = (float) memory/1073741824L;
+  // energyconsumption = this.PUE * (CPU_consumption + Mem_consumption) * runtimeH * this.PSF / 1000;
+  // n_CPUcores = 16, CPUpower = 6.6, n_cpu = 1, Mempower = 0.3725, carbonintensity = 415.6
+  // PUE = 1.2, PSF = 1
+  const energyConsumption =
+    1.2 *
+    (16 * 6.6 * 1 + 0.3725 * (Output.memory / 1073741824)) *
+    (Output.runtime / 3600000 / 1000000) *
+    1;
+
   return (
     <Result className={part}>
       <ResultHeader part={part}>{title}</ResultHeader>
@@ -35,8 +48,7 @@ function PassportPage({ result, part }: PassportPageProps) {
       </RuntimeInfo>
       <EEContainer>
         <EEIndicator type="co2" usage={Emission} />
-        {/* <EEIndicator type="energy" usage={PowerConsumption} /> */}
-        <EEIndicator type="memory" usage={Emission} />
+        <EEIndicator type="energy" usage={energyConsumption} />
       </EEContainer>
       <CIContainer>
         <ComparisionIndicator type="flight" usage={Comparision.flight} />

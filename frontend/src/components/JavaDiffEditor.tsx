@@ -57,7 +57,8 @@ function JavaDiffEditor({ setIsDiffEditor }: any) {
           </StyledServerTextsWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>데이터 센터의 에너지 효율성: </StyledServerText>
-            <StyledServerText2>1.5</StyledServerText2>
+            <StyledServerText2>1.2</StyledServerText2>
+            {/* <StyledServerText2>1.5</StyledServerText2> */}
           </StyledServerTextsWrapper>
         </StyledServerWrapper>
       </StyledServerInfo>

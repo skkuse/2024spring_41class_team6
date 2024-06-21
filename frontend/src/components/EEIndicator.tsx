@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 type EEIndicatorProps = {
-  // type: 'co2' | 'energy';
-  type: 'co2' | 'memory';
+  type: 'co2' | 'energy';
+  // type: 'co2' | 'memory';
   usage: number;
 };
 
@@ -10,7 +10,7 @@ function EEIndicator({ type, usage }: EEIndicatorProps) {
   const header =
     type === 'co2'
       ? { title: '탄소 배출량', unit: 'gCO2e' }
-      : { title: '메모리 사용량', unit: 'kWh' };
+      : { title: '전력량', unit: 'kWh' };
   // : { title: '전력 소모량', unit: 'kWh' };
 
   return (
