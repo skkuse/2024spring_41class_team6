@@ -1,11 +1,10 @@
 import axios from 'axios';
 import { ResponseType } from '../store';
-// import { changeServerResponse } from '../store';
 
 async function sendCode(javaCode: string | undefined): Promise<any> {
   try {
     const response: ResponseType = (
-      await axios.post('http://localhost:8080/code_editor', {
+      await axios.post('https://d35i3dsu8h9k4c.cloudfront.net/code_editor', {
         code: javaCode,
       })
     ).data;
@@ -17,7 +16,6 @@ async function sendCode(javaCode: string | undefined): Promise<any> {
     }
   } catch (error: any) {
     return { stderr: '문제가 생겼습니다 다시 시도해 주세요' };
-    // return testResponse;
   }
 }
 

@@ -1,11 +1,10 @@
 import styled from 'styled-components';
-import { resultData, comparisionData } from './ExecutionResult';
+import { resultData } from './ExecutionResult';
 import Stdout from './Stdout';
 import EEIndicator from './EEIndicator';
 import ComparisionIndicator from './ComparisionIndicator';
 
 type PassportPageProps = {
-  comparision: comparisionData;
   result: resultData;
   part: 'left-page' | 'right-page';
 };
@@ -39,10 +38,10 @@ function PassportPage({ result, part }: PassportPageProps) {
         <EEIndicator type="memory" usage={Emission} />
       </EEContainer>
       <CIContainer>
-        <ComparisionIndicator type="flight" usage={comparision.flight} />
-        <ComparisionIndicator type="train" usage={comparision.train} />
-        <ComparisionIndicator type="netflix" usage={comparision.netflix} />
-        <ComparisionIndicator type="google" usage={comparision.google} />
+        <ComparisionIndicator type="flight" usage={Comparision.flight} />
+        <ComparisionIndicator type="train" usage={Comparision.train} />
+        <ComparisionIndicator type="netflix" usage={Comparision.netflix} />
+        <ComparisionIndicator type="google" usage={Comparision.google} />
       </CIContainer>
     </Result>
   );
