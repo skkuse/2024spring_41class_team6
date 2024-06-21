@@ -10,7 +10,8 @@ type PassportPageProps = {
   part: 'left-page' | 'right-page';
 };
 
-function PassportPage({ comparision, result, part }: PassportPageProps) {
+function PassportPage({ result, part }: PassportPageProps) {
+  const { Emission, Output, Comparision } = result;
   const title = part === 'left-page' ? '기존 코드' : '그린화 패턴 적용 코드';
   const RuntimeInfoItem = (title: string, data: string) => {
     return (
@@ -25,15 +26,17 @@ function PassportPage({ comparision, result, part }: PassportPageProps) {
     <Result className={part}>
       <ResultHeader part={part}>{title}</ResultHeader>
       <Line part={part} />
-      <Stdout part={part} stdout={result.output} />
+      <Stdout part={part} stdout={Output.output} />
       <RuntimeInfo>
-        {RuntimeInfoItem('실행 시간', result.runtime + 's')}
-        {RuntimeInfoItem('CPU 사용 비율', result.memory + '%')}
-        {RuntimeInfoItem('CPU 전력량', result.memory + 'W')}
+        {RuntimeInfoItem('실행 시간', Output.runtime / 1000000 + 's')}
+        {RuntimeInfoItem('메모리 사용량', Output.memory / 1024 + 'KB')}
+        {/* {RuntimeInfoItem('CPU 사용 비율', Output.cpuUsage + '%')} */}
+        {/* {RuntimeInfoItem('CPU 전력량', Output.cpuPower + 'W')} */}
       </RuntimeInfo>
       <EEContainer>
-        <EEIndicator type="co2" usage={result.emission} />
-        <EEIndicator type="energy" usage={result.emission} />
+        <EEIndicator type="co2" usage={Emission} />
+        {/* <EEIndicator type="energy" usage={PowerConsumption} /> */}
+        <EEIndicator type="memory" usage={Emission} />
       </EEContainer>
       <CIContainer>
         <ComparisionIndicator type="flight" usage={comparision.flight} />
@@ -91,7 +94,7 @@ const RuntimeInfo = styled.div`
 `;
 const EEContainer = styled.div`
   display: grid;
-  width: 70%;
+  width: 85%;
   grid-template-columns: repeat(2, 1fr);
   gap: 32px;
 `;

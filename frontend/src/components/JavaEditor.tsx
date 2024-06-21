@@ -7,7 +7,7 @@ import { changeOriginalCode, changeServerResponse } from '../store';
 import LoadingAirplane from '../components/LoadingAirplane';
 // https://www.npmjs.com/package/@monaco-editor/react#installation
 
-function JavaEditor({ setDiffEditor }: any) {
+function JavaEditor({ setIsDiffEditor }: any) {
   let dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -18,8 +18,20 @@ function JavaEditor({ setDiffEditor }: any) {
   const [hasError, setHasError] = useState(false);
   const [stderrMessage, setStderrMessage] = useState('');
 
+  // Editor onchange에 자동으로 editorByte 업데이트 되지만
+  // Original 코드가 로드된 후에는 editorByte 업데이트 완된다.
+  useEffect(() => {
+    editorValueRef.current = originalJavaCode;
+    updateEditorByte(originalJavaCode);
+  });
+
+  let originalJavaCode = useSelector((state: any) => {
+    return state.originalCode.javaCode;
+  });
+
   function handleEditorChange(value: string | undefined, event: any) {
     editorValueRef.current = value;
+    dispatch(changeOriginalCode(value));
     updateEditorByte(value);
   }
 
@@ -32,17 +44,15 @@ function JavaEditor({ setDiffEditor }: any) {
     if (editorByte < 64 * 1024 && editorByte > 0) {
       try {
         setIsLoading(true);
-        let returnValue: any = await sendCode(editorValueRef.current, dispatch);
+        let returnValue: any = await sendCode(editorValueRef.current);
         if (returnValue.stderr) {
           setHasError(true);
           setStderrMessage(returnValue.stderr);
         } else {
           setHasError(false);
           setStderrMessage('');
-          dispatch(changeOriginalCode(editorValueRef.current));
           dispatch(changeServerResponse(returnValue));
-          dispatch;
-          setDiffEditor(true);
+          dispatch(setIsDiffEditor(true));
         }
         setIsLoading(false);
       } catch (error) {
@@ -88,6 +98,7 @@ function JavaEditor({ setDiffEditor }: any) {
               theme="light"
               loading="loading.."
               onChange={handleEditorChange}
+              defaultValue={originalJavaCode}
             />
           </div>
         )}

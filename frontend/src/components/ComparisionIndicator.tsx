@@ -33,7 +33,8 @@ function ComparisionIndicator({ type, usage }: EEIndicatorProps) {
       </CIHeader>
       <CIBody type={type}>
         {header(type).icon}
-        {usage.toFixed(2)}
+        {/* {usage.toFixed(2)} */}
+        {usage.toFixed(7)}
       </CIBody>
     </CIWrapper>
   );

@@ -1,53 +1,57 @@
 import styled from 'styled-components';
 import PassportPage from './PassportPage';
 import { useSelector } from 'react-redux';
-
 // Define the interfaces for the data
 // can be moved to a separate file or changed as needed
-export interface comparisionData {
-  train: number;
+type outputData = {
+  output: string;
+  // emission: number;
+  memory: number;
+  runtime: number;
+  // cpuUsage: number;
+  // cpuPower: number;
+};
+
+type comparisionData = {
   flight: number;
+  train: number;
   netflix: number;
   google: number;
-}
+};
 
 export interface resultData {
-  id: number;
-  codeId: number;
-  status: string;
-  runtime: number;
-  memory: number;
-  emission: number;
-  output: string;
+  Emission: number;
+  // PowerConsumption: number;
+  Output: outputData;
+  Comparision: comparisionData;
 }
 
 function ExecutionResult() {
-  let beforeResult = useSelector((state: any) => {
-    return state.serverResponse.beforeExecutionResult;
+  let serverResponse = useSelector((state: any) => {
+    return state.serverResponse;
   });
-  let afterResult = useSelector((state: any) => {
-    return state.serverResponse.afterExecutionResult;
-  });
-
-  let beforeTranslateResult = useSelector((state: any) => {
-    return state.serverResponse.beforeTranslateResult;
-  });
-  let afterTranslateResult = useSelector((state: any) => {
-    return state.serverResponse.afterTranslateResult;
-  });
-
+  let leftResult: resultData = {
+    Emission: serverResponse.beforeExecutionResult.emission,
+    Output: {
+      output: serverResponse.beforeExecutionResult.output,
+      memory: serverResponse.beforeExecutionResult.memory,
+      runtime: serverResponse.beforeExecutionResult.runtime,
+    },
+    Comparision: serverResponse.beforeTranslateResult,
+  };
+  let rightResult: resultData = {
+    Emission: serverResponse.afterExecutionResult.emission,
+    Output: {
+      output: serverResponse.afterExecutionResult.output,
+      memory: serverResponse.afterExecutionResult.memory,
+      runtime: serverResponse.afterExecutionResult.runtime,
+    },
+    Comparision: serverResponse.afterTranslateResult,
+  };
   return (
     <ResultWrapper>
-      <PassportPage
-        result={beforeResult}
-        part="left-page"
-        comparision={beforeTranslateResult}
-      />
-      <PassportPage
-        result={afterResult}
-        part="right-page"
-        comparision={afterTranslateResult}
-      />
+      <PassportPage result={leftResult} part="left-page" />
+      <PassportPage result={rightResult} part="right-page" />
     </ResultWrapper>
   );
 }
