@@ -131,8 +131,9 @@ async function sendCode(
   javaCode: string | undefined,
   dispatch: any
 ): Promise<any> {
+  const baseURL = process.env.REACT_APP_SERVER_URL;
   try {
-    const response = await axios.post('http://localhost:8080/code_editor', {
+    const response = await axios.post(baseURL + 'code_editor', {
       code: javaCode,
     });
 
