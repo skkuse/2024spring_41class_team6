@@ -12,6 +12,7 @@ type PassportPageProps = {
 function PassportPage({ result, part }: PassportPageProps) {
   const { Emission, Output, Comparision } = result;
   const title = part === 'left-page' ? '기존 코드' : '그린화 패턴 적용 코드';
+
   const RuntimeInfoItem = (title: string, data: string) => {
     return (
       <div style={{ display: 'flex', gap: '8px' }}>
@@ -27,8 +28,8 @@ function PassportPage({ result, part }: PassportPageProps) {
       <Line part={part} />
       <Stdout part={part} stdout={Output.output} />
       <RuntimeInfo>
-        {RuntimeInfoItem('실행 시간', Output.runtime / 1000000 + 's')}
-        {RuntimeInfoItem('메모리 사용량', Output.memory / 1024 + 'KB')}
+        {RuntimeInfoItem('실행 시간', Output.runtime / 1000000 + 'ms')}
+        {RuntimeInfoItem('메모리 사용량', Output.memory / 1024 + 'MB')}
         {/* {RuntimeInfoItem('CPU 사용 비율', Output.cpuUsage + '%')} */}
         {/* {RuntimeInfoItem('CPU 전력량', Output.cpuPower + 'W')} */}
       </RuntimeInfo>
