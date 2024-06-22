@@ -155,7 +155,7 @@ public class ExecuteApplicationService {
                     0L,
                     0L,
                     0,
-                    ""
+                    "1"
             );
         } catch (IOException e) {
             e.printStackTrace();
@@ -165,7 +165,7 @@ public class ExecuteApplicationService {
                     0L,
                     0L,
                     0,
-                    ""
+                    "2"
             );
         }
         return new ExecutionResult(
