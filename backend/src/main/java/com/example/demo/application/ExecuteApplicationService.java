@@ -93,6 +93,19 @@ public class ExecuteApplicationService {
             ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", scriptFile.toString()).directory(tempDir.toFile());
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
+            process.waitFor(10, TimeUnit.SECONDS);
+            int exitValue = process.exitValue();
+
+            if (exitValue != 0) {
+                return new ExecutionResult(
+                        code.getId(),
+                        "FAILED",
+                        0L,
+                        0L,
+                        0,
+                        exitValue + ""
+                );
+            }
 
             int i = 0;
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
@@ -116,8 +129,6 @@ public class ExecuteApplicationService {
                     }
                 }
             }
-
-            process.waitFor(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
             return new ExecutionResult(
