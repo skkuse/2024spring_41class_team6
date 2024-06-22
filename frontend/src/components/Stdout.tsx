@@ -11,10 +11,21 @@ function Stdout({ part, stdout }: StdoutProps) {
       ? 'Original Code Output'
       : 'Green Pattern Applied Code Output';
 
+  const outputLimitExceeded =
+    '출력 길이 제한을 초과했습니다. 출력이 10KB를 넘으면 일부만 표시됩니다.\n';
+
+  const output =
+    stdout.length < 1024 * 10 ? stdout : stdout.slice(0, 1024 * 10) + '...\n';
+
   return (
     <StdoutContainer>
       <StdoutTitle part={part}>{title}</StdoutTitle>
-      <Pre>{stdout}</Pre>
+      <Pre>
+        {stdout.length >= 1024 * 10 && (
+          <LimitMessage>{outputLimitExceeded}</LimitMessage>
+        )}
+        {output}
+      </Pre>
     </StdoutContainer>
   );
 }
@@ -34,14 +45,24 @@ const StdoutTitle = styled.div<{ part: string }>`
     part === 'left-page' ? 'flex-start' : 'flex-end'};
 `;
 const Pre = styled.pre`
-  display: flex;
+  display: block;
   width: 100%;
   box-sizing: border-box;
   border-radius: 16px;
   padding: 16px 20px;
+  word-break: break-all;
   white-space: pre-wrap;
   background-color: #f2f2f2;
   font-family: 'Consolas', 'Courier New', monospace;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 400px;
+`;
+const LimitMessage = styled.div`
+  color: #ff0000;
+  font-style: italic;
+  margin-bottom: 8px;
+  font-family: 'Notosans';
 `;
 
 export default Stdout;

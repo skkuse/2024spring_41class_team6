@@ -33,7 +33,7 @@ function PassportPage({ result, part }: PassportPageProps) {
     1.2 *
     (16 * 6.6 * 1 + 0.3725 * (Output.memory / 1073741824)) *
     (Output.runtime / 3600000 / 1000000) *
-    1;
+    0.001;
 
   return (
     <Result className={part}>
