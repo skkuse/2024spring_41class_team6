@@ -97,14 +97,32 @@ public class ExecuteApplicationService {
             int exitValue = process.exitValue();
 
             if (exitValue != 0) {
-                return new ExecutionResult(
-                        code.getId(),
-                        "FAILED",
-                        0L,
-                        0L,
-                        0,
-                        exitValue + ""
-                );
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        output.append(line).append("\n");
+                    }
+                }
+
+                if (exitValue == 528) {
+                    return new ExecutionResult(
+                            code.getId(),
+                            "COMPILE_ERROR",
+                            0L,
+                            0L,
+                            0,
+                            output.toString()
+                    );
+                } else if (exitValue == 841) {
+                    return new ExecutionResult(
+                            code.getId(),
+                            "RUNTIME_ERROR",
+                            0L,
+                            0L,
+                            0,
+                            output.toString()
+                    );
+                }
             }
 
             int i = 0;

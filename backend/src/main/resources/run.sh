@@ -14,7 +14,9 @@ get_memory_usage() {
     echo "$memory_usage"
 }
 
-javac Temp.java
+javac Temp.java || {
+  exit 528;
+}
 
 
 
