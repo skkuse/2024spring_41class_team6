@@ -91,13 +91,13 @@ public class ExecuteApplicationService {
             scriptFile.toFile().setExecutable(true);
 
             ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", scriptFile.toString()).directory(tempDir.toFile());
-            processBuilder.redirectErrorStream(true);
+            processBuilder.redirectErrorStream(false);
             Process process = processBuilder.start();
             process.waitFor(10, TimeUnit.SECONDS);
             int exitValue = process.exitValue();
 
             if (exitValue != 0) {
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         output.append(line).append("\n");
