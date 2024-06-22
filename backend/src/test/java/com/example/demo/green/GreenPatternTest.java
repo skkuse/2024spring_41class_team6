@@ -23,7 +23,7 @@ public class GreenPatternTest {
 
     @Test
     void GreenCodeGenerator() {
-        String filePath = System.getProperty("user.dir") + "/src/test/java/com/example/demo/green/BuggyTest.java";
+        String filePath = System.getProperty("user.dir") + "/src/test/java/com/example/demo/green/BuggyTest2.java";
         try {
             String fileContent = readFileToString(filePath);
             System.out.println("######   Buggy Code   ######");
