@@ -1,5 +1,6 @@
 package com.example.demo.application;
 
+import org.apache.tomcat.util.digester.DocumentProperties.Charset;
 import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.boot.autoconfigure.ssl.SslProperties.Bundles.Watch.File;
@@ -7,8 +8,13 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.MediaType;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
@@ -50,7 +56,7 @@ public class GitApiHandlerService {
     public GitApiHandlerService() {
         webClient = WebClient.builder()
             .defaultHeader("X-GitHub-Api-Version", "2022-11-28")
-            .defaultHeader("Accept", "application/vnd.github+json")
+            // .defaultHeader("Accept", "application/vnd.github+json")
             .build();
         gson = new Gson();
     }
@@ -76,17 +82,38 @@ public class GitApiHandlerService {
         return res;
     }
     
+    public String getLocationHeader(String url) {
+        Mono<String> ret;
+        try{
+            ret = webClient.get()
+                .uri(url)
+                .exchangeToMono(response -> {
+                    return Mono.justOrEmpty(response.headers().header("Location").stream().findFirst());   
+                });
+        } catch (Exception e) {
+            System.err.println("Error occurred: " + e.getMessage());
+            return null;
+        }
+        return ret.block();
+    }
+
+
     private int getFileReq(String url, Path filePath) {
         try {
             Flux<DataBuffer> buf = webClient.method(HttpMethod.GET)
                     .uri(url)
                     // .header("Authorization", String.format("Bearer %s", this.access_token))
                     .retrieve()
-                    .bodyToFlux(DataBuffer.class);
+                    .bodyToFlux(DataBuffer.class)
+                    .doOnComplete(() -> log.info("File downloaded successfully"));
 
-            DataBufferUtils.write(buf, filePath, StandardOpenOption.CREATE).block();
+            DataBufferUtils.write(buf, filePath, StandardOpenOption.CREATE)
+                .share()
+                .block();
+
+            log.info("File: {} {}",  filePath, Files.size(filePath));
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
             return 0;
         }
         return 1;
@@ -160,17 +187,28 @@ public class GitApiHandlerService {
 
     private Path getFile(String url) {
         Path filePath = null;
+        Path tempDir;
+        Path zipPath;
+        
         try {
-            // Path dirPath = Files.createTempDirectory("java-code");
-            double randomVal = new Random(200).nextInt();
-            final Path zipPath = Paths.get("src", "main", "resources", String.format("%f.zip",randomVal));
+            tempDir = Files.createTempDirectory("java-repo");
+            zipPath = tempDir.resolve("Temp.zip");
 
-            // if success:
-            if (this.getFileReq(url, zipPath) == 1) {
-                // try unzip
-                Path targetPath = Paths.get("src", "main", "resources", String.format("%f",randomVal));
-                GitApiHandlerService.unzip(zipPath, targetPath);
+            if (this.getFileReq(url, zipPath) == 0) {
+                log.error("FileReq failed");
+                return null;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        // try unzip
+        try {
+            Path targetPath = tempDir.resolve("unzip");
+            // Path targetPath = Paths.get("src", "main", "resources", String.format("%f",randomVal));
+            GitApiHandlerService.unzip(zipPath, targetPath);
+            filePath = targetPath;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -208,16 +246,20 @@ public class GitApiHandlerService {
         // TODO: If DB have a record after last_update then return the record
 
         // .zip download:   /repos/{owner}/{repo}/zipball/{ref}
-        String downloadURL = Base_URL + String.format(
+        String downloadReqURL = Base_URL + String.format(
             "repos/%s/%s/zipball",
             purl.getOwner(),
             purl.getRepo()
         );
 
+        String downloadURL = this.getLocationHeader(downloadReqURL);
+
         log.info("Download URL: " + downloadURL);
         Path repoPath = getFile(downloadURL);
 
-        log.info("repopath: " + repoPath);
+        log.info("Saved & Unzipped in: " + repoPath);
+
+        
 
         // if executable: try run
         // ExecutionResult executionResult = executeApplicationService.run(code);
