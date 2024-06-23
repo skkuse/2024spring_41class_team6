@@ -93,7 +93,18 @@ public class ExecuteApplicationService {
             ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", scriptFile.toString()).directory(tempDir.toFile());
             processBuilder.redirectErrorStream(false);
             Process process = processBuilder.start();
-            process.waitFor(10, TimeUnit.SECONDS);
+
+            if (!process.waitFor(10, TimeUnit.SECONDS)) {
+                return new ExecutionResult(
+                        code.getId(),
+                        "TIME_EXCEEDED",
+                        0L,
+                        0L,
+                        0,
+                        "1"
+                );
+            }
+
             int exitValue = process.exitValue();
 
             if (exitValue != 0) {
@@ -104,7 +115,7 @@ public class ExecuteApplicationService {
                     }
                 }
 
-                if (exitValue == 528) {
+                if (exitValue == 16) {
                     return new ExecutionResult(
                             code.getId(),
                             "COMPILE_ERROR",
@@ -113,16 +124,16 @@ public class ExecuteApplicationService {
                             0,
                             output.toString()
                     );
-                } else if (exitValue == 841) {
-                    return new ExecutionResult(
-                            code.getId(),
-                            "RUNTIME_ERROR",
-                            0L,
-                            0L,
-                            0,
-                            output.toString()
-                    );
                 }
+
+                return new ExecutionResult(
+                        code.getId(),
+                        "COMPILE_ERROR",
+                        0L,
+                        0L,
+                        exitValue,
+                        output.toString()
+                );
             }
 
             int i = 0;
