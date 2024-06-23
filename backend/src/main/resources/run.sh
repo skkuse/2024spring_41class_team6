@@ -23,7 +23,6 @@ javac Temp.java
 PIDFILE=pid.txt
 start_time=$(date +%s%N)
 java Temp > java_output.txt 2>&1 &
-end_time=$(date +%s%N)
 
 JAVA_PID=$!
 echo $JAVA_PID > $PIDFILE
@@ -37,6 +36,8 @@ while kill -0 $JAVA_PID 2>/dev/null; do
     echo "$memory_usage"
     sleep 1
 done
+
+end_time=$(date +%s%N)
 
 duration=$((end_time - start_time))
 
