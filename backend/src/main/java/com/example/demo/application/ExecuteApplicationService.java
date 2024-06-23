@@ -94,7 +94,7 @@ public class ExecuteApplicationService {
             processBuilder.redirectErrorStream(false);
             Process process = processBuilder.start();
 
-            if (!process.waitFor(10, TimeUnit.SECONDS)) {
+            if (!process.waitFor(20, TimeUnit.SECONDS)) {
                 return new ExecutionResult(
                         code.getId(),
                         "TIME_EXCEEDED",
