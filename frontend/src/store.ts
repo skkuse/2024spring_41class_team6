@@ -1,5 +1,52 @@
 import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+// Main
+let isDiffEditor = createSlice({
+  name: 'isDiffEditor',
+  initialState: false,
+  reducers: {
+    setIsDiffEditor(state: any, action: PayloadAction<any>): any {
+      return action.payload;
+    },
+  },
+});
+export const { setIsDiffEditor } = isDiffEditor.actions;
+
+// JavaEditor
+
+export interface ResponseType {
+  greenCode: string;
+  beforeExecutionResult: {
+    id: number;
+    codeId: number;
+    status: string;
+    runtime: number;
+    memory: number;
+    emission: number;
+    output: string;
+  };
+  afterExecutionResult: {
+    id: number;
+    codeId: number;
+    status: string;
+    runtime: number;
+    memory: number;
+    emission: number;
+    output: string;
+  };
+  beforeTranslateResult: {
+    train: number;
+    flight: number;
+    netflix: number;
+    google: number;
+  };
+  afterTranslateResult: {
+    train: number;
+    flight: number;
+    netflix: number;
+    google: number;
+  };
+}
 // serverResponse
 let serverResponse = createSlice({
   name: 'serverResponse',
@@ -39,31 +86,36 @@ export default configureStore({
   reducer: {
     serverResponse: serverResponse.reducer,
     originalCode: originalCode.reducer,
+    isDiffEditor: isDiffEditor.reducer,
   },
 });
 
-let javaCode = `import java.util.Scanner;
+let javaCode = `public class ConvertMilliseconds {
+  public static void main(String[] args) {
+      // Example runtime in milliseconds
+      long milliseconds = 2028834;
 
-  public class SumOfTwoNumbers {
-      public static void main(String[] args) {
-          Scanner scanner = new Scanner(System.in);
-  
-          // Prompt the user to enter the first number
-          System.out.print("Enter the first number: ");
-          int num1 = scanner.nextInt();
-  
-          // Prompt the user to enter the second number
-          System.out.print("Enter the second number: ");
-          int num2 = scanner.nextInt();
-  
-          // Calculate the sum of the two numbers
-          int sum = num1 + num2;
-  
-          // Display the result
-          System.out.println("The sum of " + num1 + " and " + num2 + " is " + sum);
-          
-          // Close the scanner
-          scanner.close();
+      // Convert milliseconds to seconds
+      long seconds = milliseconds / 1000;
+      long millisecondsLeft = milliseconds % 1000;
+
+      // Convert seconds to minutes and seconds
+      long minutes = seconds / 60;
+      long secondsLeft = seconds % 60;
+
+      // Convert minutes to hours and minutes
+      long hours = minutes / 60;
+      long minutesLeft = minutes % 60;
+
+      // Display the result
+      if(hours != -1){
+          if(minutes != -1){
+              if(seconds != -1){
+                  System.out.println("Runtime: " + hours + " hours " + minutesLeft + " minutes " + secondsLeft + " seconds " + millisecondsLeft + " milliseconds");           
+              }
+          }
       }
   }
+}
+
   `;

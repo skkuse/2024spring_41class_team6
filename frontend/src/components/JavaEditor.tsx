@@ -7,7 +7,7 @@ import { changeOriginalCode, changeServerResponse } from '../store';
 import LoadingAirplane from '../components/LoadingAirplane';
 // https://www.npmjs.com/package/@monaco-editor/react#installation
 
-function JavaEditor({ setDiffEditor }: any) {
+function JavaEditor({ setIsDiffEditor }: any) {
   let dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -18,8 +18,20 @@ function JavaEditor({ setDiffEditor }: any) {
   const [hasError, setHasError] = useState(false);
   const [stderrMessage, setStderrMessage] = useState('');
 
+  // Editor onchange에 자동으로 editorByte 업데이트 되지만
+  // Original 코드가 로드된 후에는 editorByte 업데이트 완된다.
+  useEffect(() => {
+    editorValueRef.current = originalJavaCode;
+    updateEditorByte(originalJavaCode);
+  });
+
+  let originalJavaCode = useSelector((state: any) => {
+    return state.originalCode.javaCode;
+  });
+
   function handleEditorChange(value: string | undefined, event: any) {
     editorValueRef.current = value;
+    dispatch(changeOriginalCode(value));
     updateEditorByte(value);
   }
 
@@ -32,17 +44,15 @@ function JavaEditor({ setDiffEditor }: any) {
     if (editorByte < 64 * 1024 && editorByte > 0) {
       try {
         setIsLoading(true);
-        let returnValue: any = await sendCode(editorValueRef.current, dispatch);
+        let returnValue: any = await sendCode(editorValueRef.current);
         if (returnValue.stderr) {
           setHasError(true);
           setStderrMessage(returnValue.stderr);
         } else {
           setHasError(false);
           setStderrMessage('');
-          dispatch(changeOriginalCode(editorValueRef.current));
           dispatch(changeServerResponse(returnValue));
-          dispatch;
-          setDiffEditor(true);
+          dispatch(setIsDiffEditor(true));
         }
         setIsLoading(false);
       } catch (error) {
@@ -64,14 +74,12 @@ function JavaEditor({ setDiffEditor }: any) {
         <StyledRunButton
           onClick={() => {
             onSendClick();
-            setDiffEditor(true);
           }}
         >
           제출
         </StyledRunButton>
       </StyledTopWrapper>
       <div style={{ border: 'solid lightgray 1px' }}>
-
         {hasError ? (
           <ErrorWrapper>
             <Editor
@@ -90,6 +98,7 @@ function JavaEditor({ setDiffEditor }: any) {
               theme="light"
               loading="loading.."
               onChange={handleEditorChange}
+              defaultValue={originalJavaCode}
             />
           </div>
         )}
@@ -105,15 +114,18 @@ function JavaEditor({ setDiffEditor }: any) {
         <StyledServerWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>CPU 정보: </StyledServerText>
-            <StyledServerText2>AMD Ryzen 9 3950X/16코어</StyledServerText2>
+            <StyledServerText2>
+              Intel(R) Xeon(R) CPU E5-2686 v4 @ 2.30GHz
+            </StyledServerText2>
           </StyledServerTextsWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>가용 메모리 크기: </StyledServerText>
-            <StyledServerText2>00GB</StyledServerText2>
+            <StyledServerText2>1GB</StyledServerText2>
           </StyledServerTextsWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>데이터 센터의 에너지 효율성: </StyledServerText>
-            <StyledServerText2>1.5</StyledServerText2>
+            <StyledServerText2>1.2</StyledServerText2>
+            {/* <StyledServerText2>1.5</StyledServerText2> */}
           </StyledServerTextsWrapper>
         </StyledServerWrapper>
       </StyledServerInfo>

@@ -15,14 +15,13 @@ function ComparisionIndicator({ type, usage }: EEIndicatorProps) {
   const header = (type: string): { title: string; unit: string; icon: any } => {
     switch (type) {
       default:
-        return { title: '비행 거리', unit: 'gCO2e/km', icon: <FlightIcon /> };
+        return { title: '비행 거리', unit: 'km', icon: <FlightIcon /> };
       case 'train':
-        return { title: '기차', unit: 'kWh/km', icon: <TrainIcon /> };
+        return { title: '기차', unit: 'km', icon: <TrainIcon /> };
       case 'netflix':
-        return { title: '넷플릭스', unit: 'kWh', icon: <NetflixIcon /> };
+        return { title: '넷플릭스', unit: 'hour(s)', icon: <NetflixIcon /> };
       case 'google':
-        return { title: '구글 검색', unit: 'kWh', icon: <GoogleIcon /> };
-
+        return { title: '구글 검색', unit: 'time(s)', icon: <GoogleIcon /> };
     }
   };
 
@@ -34,7 +33,8 @@ function ComparisionIndicator({ type, usage }: EEIndicatorProps) {
       </CIHeader>
       <CIBody type={type}>
         {header(type).icon}
-        {usage.toFixed(2)}
+        {/* {usage.toFixed(2)} */}
+        {usage.toFixed(7)}
       </CIBody>
     </CIWrapper>
   );

@@ -88,7 +88,6 @@ const StyledP = styled.p`
   color: #979797;
 `;
 
-
 const FormWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
@@ -132,7 +131,6 @@ const StyledButton = styled.button`
   border-radius: 8px;
   border: none;
 `;
-
 
 const WarningMessage = styled.div`
   background-color: #cc3300;

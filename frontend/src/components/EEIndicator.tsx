@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 type EEIndicatorProps = {
   type: 'co2' | 'energy';
+  // type: 'co2' | 'memory';
   usage: number;
 };
 
@@ -9,7 +10,8 @@ function EEIndicator({ type, usage }: EEIndicatorProps) {
   const header =
     type === 'co2'
       ? { title: '탄소 배출량', unit: 'gCO2e' }
-      : { title: '전력 소모량', unit: 'kWh' };
+      : { title: '전력량', unit: 'kWh' };
+  // : { title: '전력 소모량', unit: 'kWh' };
 
   return (
     <EEWrapper>
@@ -17,7 +19,8 @@ function EEIndicator({ type, usage }: EEIndicatorProps) {
         {header.title}
         <span style={{ color: '#979797' }}>{header.unit}</span>
       </EEHeader>
-      <EEBody type={type}>{usage.toFixed(2)}</EEBody>
+      {/* <EEBody type={type}>{usage.toFixed(2)}</EEBody> */}
+      <EEBody type={type}>{usage.toFixed(7)}</EEBody>
     </EEWrapper>
   );
 }

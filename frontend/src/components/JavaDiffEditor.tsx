@@ -1,17 +1,19 @@
 import styled from 'styled-components';
 import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
 import { useState } from 'react';
-
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeOriginalCode } from '../store';
 // https://www.npmjs.com/package/@monaco-editor/react#installation
 
-function JavaDiffEditor({ setDiffEditor }: any) {
+function JavaDiffEditor({ setIsDiffEditor }: any) {
+  let dispatch = useDispatch();
   let originalCode = useSelector((state: any) => {
     return state.originalCode.javaCode;
   });
   let greenCode = useSelector((state: any) => {
     return state.serverResponse.greenCode;
   });
+  // console.log('greenCode', greenCode);
 
   return (
     <StyledDiffEditor>
@@ -21,7 +23,8 @@ function JavaDiffEditor({ setDiffEditor }: any) {
         </StyledCodeExplain>
         <StyledRunButton
           onClick={() => {
-            setDiffEditor(false);
+            dispatch(changeOriginalCode(''));
+            dispatch(setIsDiffEditor(false));
           }}
         >
           코드다시 입력하기
@@ -46,15 +49,18 @@ function JavaDiffEditor({ setDiffEditor }: any) {
         <StyledServerWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>CPU 정보: </StyledServerText>
-            <StyledServerText2>AMD Ryzen 9 3950X/16코어</StyledServerText2>
+            <StyledServerText2>
+              Intel(R) Xeon(R) CPU E5-2686 v4 @ 2.30GHz
+            </StyledServerText2>
           </StyledServerTextsWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>가용 메모리 크기: </StyledServerText>
-            <StyledServerText2>00GB</StyledServerText2>
+            <StyledServerText2>1GB</StyledServerText2>
           </StyledServerTextsWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>데이터 센터의 에너지 효율성: </StyledServerText>
-            <StyledServerText2>1.5</StyledServerText2>
+            <StyledServerText2>1.2</StyledServerText2>
+            {/* <StyledServerText2>1.5</StyledServerText2> */}
           </StyledServerTextsWrapper>
         </StyledServerWrapper>
       </StyledServerInfo>

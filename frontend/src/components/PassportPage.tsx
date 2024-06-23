@@ -10,8 +10,9 @@ type PassportPageProps = {
 };
 
 function PassportPage({ result, part }: PassportPageProps) {
-  const { Emission, PowerConsumption, Output, Comparision } = result;
+  const { Emission, Output, Comparision } = result;
   const title = part === 'left-page' ? '기존 코드' : '그린화 패턴 적용 코드';
+
   const RuntimeInfoItem = (title: string, data: string) => {
     return (
       <div style={{ display: 'flex', gap: '8px' }}>
@@ -21,19 +22,33 @@ function PassportPage({ result, part }: PassportPageProps) {
     );
   };
 
+  // float CPU_consumption = this.n_CPUcores * this.CPUpower * this.n_CPU
+  // float Mem_consumption = this.MEMpower * memGB;
+  // float runtimeH = (float) runtime/3600000/1000000;
+  // float memGB = (float) memory/1073741824L;
+  // energyconsumption = this.PUE * (CPU_consumption + Mem_consumption) * runtimeH * this.PSF / 1000;
+  // n_CPUcores = 16, CPUpower = 6.6, n_cpu = 1, Mempower = 0.3725, carbonintensity = 415.6
+  // PUE = 1.2, PSF = 1
+  const energyConsumption =
+    1.2 *
+    (16 * 6.6 * 1 + 0.3725 * (Output.memory / 1073741824)) *
+    (Output.runtime / 3600000 / 1000000) *
+    0.001;
+
   return (
     <Result className={part}>
       <ResultHeader part={part}>{title}</ResultHeader>
       <Line part={part} />
-      <Stdout part={part} stdout={Output.stdout} />
+      <Stdout part={part} stdout={Output.output} />
       <RuntimeInfo>
-        {RuntimeInfoItem('실행 시간', Output.runtime + 's')}
-        {RuntimeInfoItem('CPU 사용 비율', Output.cpuUsage + '%')}
-        {RuntimeInfoItem('CPU 전력량', Output.cpuPower + 'W')}
+        {RuntimeInfoItem('실행 시간', Output.runtime / 1000000 + 'ms')}
+        {RuntimeInfoItem('메모리 사용량', Output.memory / 1024 + 'MB')}
+        {/* {RuntimeInfoItem('CPU 사용 비율', Output.cpuUsage + '%')} */}
+        {/* {RuntimeInfoItem('CPU 전력량', Output.cpuPower + 'W')} */}
       </RuntimeInfo>
       <EEContainer>
         <EEIndicator type="co2" usage={Emission} />
-        <EEIndicator type="energy" usage={PowerConsumption} />
+        <EEIndicator type="energy" usage={energyConsumption} />
       </EEContainer>
       <CIContainer>
         <ComparisionIndicator type="flight" usage={Comparision.flight} />
@@ -91,7 +106,7 @@ const RuntimeInfo = styled.div`
 `;
 const EEContainer = styled.div`
   display: grid;
-  width: 70%;
+  width: 85%;
   grid-template-columns: repeat(2, 1fr);
   gap: 32px;
 `;
