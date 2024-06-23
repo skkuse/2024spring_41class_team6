@@ -49,11 +49,13 @@ function JavaDiffEditor({ setIsDiffEditor }: any) {
         <StyledServerWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>CPU 정보: </StyledServerText>
-            <StyledServerText2>AMD Ryzen 9 3950X/16코어</StyledServerText2>
+            <StyledServerText2>
+              Intel(R) Xeon(R) CPU E5-2686 v4 @ 2.30GHz
+            </StyledServerText2>
           </StyledServerTextsWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>가용 메모리 크기: </StyledServerText>
-            <StyledServerText2>00GB</StyledServerText2>
+            <StyledServerText2>1GB</StyledServerText2>
           </StyledServerTextsWrapper>
           <StyledServerTextsWrapper>
             <StyledServerText>데이터 센터의 에너지 효율성: </StyledServerText>
