@@ -20,4 +20,9 @@ public class CodeMatch {
 
     @Column(name = "after_id")
     private int afterId;
+
+    public CodeMatch(int beforeId, int afterId) {
+        this.beforeId = beforeId;
+        this.afterId = afterId;
+    }
 }

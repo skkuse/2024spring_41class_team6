@@ -4,6 +4,9 @@ import ExecutionResult from '../components/ExecutionResult';
 import { useState } from 'react';
 import styled from 'styled-components';
 
+// import LoadingAirplane from '../components/LoadingAirplane';
+
+
 function Main() {
   const [isDiffEditor, setIsDiffEditor] = useState(false);
 

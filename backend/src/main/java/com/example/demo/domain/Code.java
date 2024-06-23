@@ -23,4 +23,8 @@ public class Code {
 
     @Column(name = "code")
     private String code;
+
+    public Code(String code) {
+        this.code = code;
+    }
 }

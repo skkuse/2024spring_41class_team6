@@ -18,10 +18,12 @@ javac Temp.java
 
 
 
-start_time=$(date +%s%3N)
+
 
 PIDFILE=pid.txt
+start_time=$(date +%s%N)
 java Temp > java_output.txt 2>&1 &
+end_time=$(date +%s%N)
 JAVA_PID=$!
 echo $JAVA_PID > $PIDFILE
 
@@ -35,13 +37,9 @@ while kill -0 $JAVA_PID 2>/dev/null; do
     sleep 1
 done
 
-
-
-end_time=$(date +%s%3N)
-
 duration=$((end_time - start_time))
 
 java_output=$(cat java_output.txt)
 
-#echo "$java_output"
 echo "$duration"
+echo "$java_output"
