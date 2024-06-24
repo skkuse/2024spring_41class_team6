@@ -1,9 +1,6 @@
 package com.example.demo.controller;
-
 import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.application.GitApiHandlerService;
-
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -19,10 +16,9 @@ public class GitApiHandlerController {
     }
 
     @GetMapping("")
-    public String get(@RequestParam String url) {
-        // log.info(url);
-        this.gitApiHandlerService.run(url);
-        return "Success";
+    public String get(@RequestParam String url, @RequestBody String code) {
+        this.gitApiHandlerService.run(url, code);
+        return "success";
     }
     
 }

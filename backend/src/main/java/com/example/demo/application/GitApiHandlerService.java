@@ -24,19 +24,33 @@ import reactor.core.publisher.Mono;
 
 import java.util.StringTokenizer;
 import java.util.Random;
+import java.util.ArrayList;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.*;
 
+import com.example.demo.domain.Code;
 import com.google.gson.*;
+import com.example.demo.domain.CodeMatch;
+import com.example.demo.green.GreenPattern;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 @Service
 @Slf4j
@@ -47,6 +61,16 @@ public class GitApiHandlerService {
     private ExecuteApplicationService executeApplicationService;
     @Autowired
     private RepoService repoService;
+    @Autowired
+    private CodeEditorService codeEditorService;
+    @Autowired
+    private CodeService codeService;
+    @Autowired
+    private GreenPattern greenPattern;
+    @Autowired
+    private CodeMatchService codeMatchService;
+    @Autowired
+    private GitRepoHandlerService gitRepoHandlerService;
 
     private String Base_URL = "https://api.github.com/";
     private String access_token;
@@ -66,6 +90,7 @@ public class GitApiHandlerService {
         access_token = this.oAuthApplicationService.auth("code_here");
     }
 
+    // GET Request -> return Body
     private String getReq(String url) {
         String res;
         try {
@@ -82,6 +107,7 @@ public class GitApiHandlerService {
         return res;
     }
     
+    // GET Request -> handle Redirect for get Download Link
     public String getLocationHeader(String url) {
         Mono<String> ret;
         try{
@@ -97,7 +123,7 @@ public class GitApiHandlerService {
         return ret.block();
     }
 
-
+    // GET Request -> return File (zip)
     private int getFileReq(String url, Path filePath) {
         try {
             Flux<DataBuffer> buf = webClient.method(HttpMethod.GET)
@@ -119,6 +145,7 @@ public class GitApiHandlerService {
         return 1;
     }
 
+    // Unzip File in Temporary dir.
     private static void unzip(Path zipPath, Path targetPath) {
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipPath.toFile()))) {
             ZipEntry zipEntry = zis.getNextEntry();
@@ -146,6 +173,7 @@ public class GitApiHandlerService {
         }
     }
     
+    // Check Illegal path while unzip
     public static Path zipSlipProtect(ZipEntry zipEntry, Path targetPath) throws IOException {
         Path targetDirResolved = targetPath.resolve(zipEntry.getName());
         Path normalizePath = targetDirResolved.normalize();
@@ -155,6 +183,7 @@ public class GitApiHandlerService {
         return normalizePath;
     }
 
+    // Object for Github URL
     @Data
     private class ParsedURL {
         String repo;
@@ -163,6 +192,16 @@ public class GitApiHandlerService {
         String branch;
     }
 
+    // Object to Save Git API Response
+    @Data
+    private class GetRepoResponseObject {
+        int id;
+        class res {
+            String updated_at;
+        }
+    }
+
+    // Input URL parsing & validation -> ParsedURL Object
     private ParsedURL parseURL(String url) {
         StringTokenizer tokenizer = new StringTokenizer(url, "/");
         String segment;
@@ -185,7 +224,8 @@ public class GitApiHandlerService {
         return parsedURL;
     }
 
-    private Path getFile(String url) {
+    // Same as Git Clone (Download zip file & Unzip in temp DIR) -> return temp DIR.
+    private Path clone(String url) {
         Path filePath = null;
         Path tempDir;
         Path zipPath;
@@ -203,10 +243,9 @@ public class GitApiHandlerService {
             return null;
         }
 
-        // try unzip
+        // unzip
         try {
             Path targetPath = tempDir.resolve("unzip");
-            // Path targetPath = Paths.get("src", "main", "resources", String.format("%f",randomVal));
             GitApiHandlerService.unzip(zipPath, targetPath);
             filePath = targetPath;
         } catch (Exception e) {
@@ -219,15 +258,84 @@ public class GitApiHandlerService {
         return filePath;
     }
 
-    @Data
-    private class GetRepoResponseObject {
-        int id;
-        class res {
-            String updated_at;
+    // Get all .java files from directory
+    public ArrayList<Path> getJavaFiles(Path path) {
+        ArrayList<Path> ret = new ArrayList<Path>();
+        try {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (file.toString().endsWith(".java")) {
+                        ret.add(file);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    // Read file -> return the content (String)
+    public String readFileContent(Path path) {
+        try {
+            byte[] bytes = Files.readAllBytes(path);
+            return new String(bytes, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 
-    public void run(String url) {
+    public void overwriteFile(Path path, String content) throws IOException {
+        Files.write(path, content.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+    }
+
+    private static void execCommand(Path path, Boolean log, String... commands) throws IOException, InterruptedException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(commands);
+
+        if(log) processBuilder.redirectErrorStream(true);
+        Process process = processBuilder.start();
+        if(log) {
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        }
+        int exitCode = process.waitFor();
+
+        if (exitCode == 0) {
+            System.out.println("Command executed successfully: " + String.join(" ", commands));
+        } else {
+            System.out.println("Command failed with exit code " + exitCode + ": " + String.join(" ", commands));
+        }
+    }
+
+    public static void gitCommitAndPush(Path path) throws IOException {
+        try {
+            execCommand(path, false, "git", "-C", path.toString(), "init");
+            execCommand(path, false, "git", "-C", path.toString(), "remote", "add", "origin", "https://github.com/Lee-won-hyeok/testrepo.git");
+            execCommand(path, false, "git", "-C", path.toString(), "branch", "-M", "testbranch");
+            execCommand(path, false, "git", "-C", path.toString(), "add", ".");
+            execCommand(path, false, "git", "-C", path.toString(), "commit", "-m", "testcommit");
+            execCommand(path, true, "git", "-C", path.toString(), "push", "origin", "testbranch");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Service runtime
+    public void run(String url, String oauthCode) {
         log.info("Requested URL: " + url);
         ParsedURL purl = this.parseURL(url);
 
@@ -255,24 +363,45 @@ public class GitApiHandlerService {
         String downloadURL = this.getLocationHeader(downloadReqURL);
 
         log.info("Download URL: " + downloadURL);
-        Path repoPath = getFile(downloadURL);
+        Path repoPath = clone(downloadURL);
 
         log.info("Saved & Unzipped in: " + repoPath);
 
-        
+        // TODO: Executable? -> RUN
+        // TODO: GET RUNTIME RESULT & CALCULATE EMISSION
 
-        // if executable: try run
-        // ExecutionResult executionResult = executeApplicationService.run(code);
+        // Greenize
+        ArrayList<Path> files = getJavaFiles(repoPath);
 
-        // get runtime
+        // Read .java file & Pattern Matching
+        for (Path file: files) {
+            String code = readFileContent(file);
+            Code newCode = new Code(code);
+            newCode = codeService.createCode(newCode);
+            String greenCode = greenPattern.generateGreenCode(newCode.getCode());
+            // log.info("matched Code: "+ greenCode);
+            Code newGreenCode = new Code(greenCode);
+            newGreenCode = codeService.createCode(newGreenCode);
+            codeMatchService.createCodeMatch(new CodeMatch(newCode.getId(), newGreenCode.getId()));
 
-        // calculate emission
-
-        // try greenize
+            // rewrite in original file path
+            try {
+                overwriteFile(file, greenCode);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         // PR API
+        try{ 
+            gitCommitAndPush(repoPath);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         
-        
-        // return executionResult;
+        // gitRepoHandlerService.main(repoPath, url, oauthCode);
+
+        // return ;
     }
 }
