@@ -35,7 +35,7 @@ function GitRepo() {
     // sessionStorage에 저장된 URL 삭제
     sessionStorage.removeItem('gitURL');
 
-    if (code) {
+    if (code && gitURL) {
       // 서버로 code와 gitURL을 보내고, PR 생성, response로 PR URL을 받아옴
       setIsPending(true);
       sendGitURL(code, gitURL)
@@ -49,6 +49,9 @@ function GitRepo() {
           setIsPending(false);
         })
         .catch((err) => {
+          setIsError(true);
+          setIsPending(false);
+
           console.error(err);
         });
     }
@@ -57,7 +60,11 @@ function GitRepo() {
   return (
     <Wrapper>
       {isError && <GitPRFail />}
-      {isDone ? <GitPRDone url="127.0.0.1" /> : !isPending && <GitURLForm />}
+      {isDone ? (
+        <GitPRDone url="127.0.0.1" />
+      ) : (
+        !isPending && !isError && <GitURLForm />
+      )}
       {isPending && <LoadingAirplane />}
     </Wrapper>
   );

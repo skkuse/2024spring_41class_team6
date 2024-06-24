@@ -18,7 +18,7 @@ export async function sendGitURL(
 
     // reqeust 실패
     if (response.status === 200 || response.status === 500) {
-      return response.data;
+      throw new Error('서버와의 통신에 문제가 발생했습니다');
     }
 
     // reqeust 성공
