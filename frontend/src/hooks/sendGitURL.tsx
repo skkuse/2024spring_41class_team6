@@ -14,8 +14,7 @@ export async function sendGitURL(code: string, gitURL: string): Promise<any> {
     });
 
     // reqeust 실패
-    if (response.status === 200) {
-      console.log(response.data);
+    if (response.status === 200 || response.status === 500) {
       return response.data;
     }
 
