@@ -9,6 +9,7 @@ function GitRepo() {
   const [isPending, setIsPending] = useState(false);
   const [isDone, setIsDone] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [prUrl, setPrUrl] = useState('');
 
   // PR 실패시 컴포넌트
   function GitPRFail() {
@@ -41,6 +42,7 @@ function GitRepo() {
       sendGitURL(code, gitURL)
         .then((res) => {
           if (res.url) {
+            setPrUrl(res.url);
             setIsDone(true);
           } else {
             setIsError(true);
@@ -61,7 +63,7 @@ function GitRepo() {
     <Wrapper>
       {isError && <GitPRFail />}
       {isDone ? (
-        <GitPRDone url="127.0.0.1" />
+        <GitPRDone url={prUrl} />
       ) : (
         !isPending && !isError && <GitURLForm />
       )}
