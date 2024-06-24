@@ -27,9 +27,8 @@ public class GitApiHandlerController {
     }
 
     @GetMapping("")
-    public ResponseObject get(@RequestParam String url) {
-        var code = "test";
-        String ret = this.gitApiHandlerService.run(url, code);
+    public ResponseObject get(@RequestBody String gitURL, @RequestBody String code) {
+        String ret = this.gitApiHandlerService.run(gitURL, code);
         return new ResponseObject(ret);   
     }
     
