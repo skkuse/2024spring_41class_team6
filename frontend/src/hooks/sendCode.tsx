@@ -13,6 +13,10 @@ async function sendCode(javaCode: string | undefined): Promise<any> {
       return { stderr: '런타임 에러가 발생했습니다. 다시 시도해 주세요' };
     } else if (response.beforeExecutionResult.status == 'COMPILE_ERROR') {
       return { stderr: '컴파일 에러가 발생했습니다. 다시 시도해 주세요' };
+    } else if (response.beforeExecutionResult.status == 'TIME_EXCEEDED') {
+      return { stderr: '시간 초과가 발생했습니다. 다시 시도해 주세요' };
+    } else if (response.beforeExecutionResult.status != 'SUCCESS') {
+      return { stderr: '문제가 생겼습니다 다시 시도해 주세요' };
     } else {
       return response;
     }

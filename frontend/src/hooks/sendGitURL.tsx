@@ -5,10 +5,13 @@ interface GitURL {
   prurl: string;
 }
 
-export async function sendGitURL(code: string, gitURL: string): Promise<any> {
+export async function sendGitURL(
+  code: string,
+  gitURL: string | null
+): Promise<any> {
   // post로 서버에 code랑 gitURL 보내기
   try {
-    const response = await axios.post('http://localhost:8000/?  ', {
+    const response = await axios.post('http://localhost:8080/git', {
       code: code,
       gitURL: gitURL,
     });
