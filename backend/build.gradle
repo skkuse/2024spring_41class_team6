@@ -36,8 +36,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test:3.4.11'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    implementation group: 'org.kohsuke', name: 'github-api', version: '1.8'
 }
 
 tasks.named('test') {

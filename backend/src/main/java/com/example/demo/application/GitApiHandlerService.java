@@ -298,44 +298,8 @@ public class GitApiHandlerService {
         Files.write(path, content.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
     }
 
-    private static void execCommand(Path path, Boolean log, String... commands) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command(commands);
-
-        if(log) processBuilder.redirectErrorStream(true);
-        Process process = processBuilder.start();
-        if(log) {
-            InputStream inputStream = process.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        }
-        int exitCode = process.waitFor();
-
-        if (exitCode == 0) {
-            System.out.println("Command executed successfully: " + String.join(" ", commands));
-        } else {
-            System.out.println("Command failed with exit code " + exitCode + ": " + String.join(" ", commands));
-        }
-    }
-
-    public static void gitCommitAndPush(Path path) throws IOException {
-        try {
-            execCommand(path, false, "git", "-C", path.toString(), "init");
-            execCommand(path, false, "git", "-C", path.toString(), "remote", "add", "origin", "https://github.com/Lee-won-hyeok/testrepo.git");
-            execCommand(path, false, "git", "-C", path.toString(), "branch", "-M", "testbranch");
-            execCommand(path, false, "git", "-C", path.toString(), "add", ".");
-            execCommand(path, false, "git", "-C", path.toString(), "commit", "-m", "testcommit");
-            execCommand(path, true, "git", "-C", path.toString(), "push", "origin", "testbranch");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     // Service runtime
-    public void run(String url, String oauthCode) {
+    public String run(String url, String oauthCode) {
         log.info("Requested URL: " + url);
         ParsedURL purl = this.parseURL(url);
 
@@ -394,14 +358,12 @@ public class GitApiHandlerService {
 
         // PR API
         try{ 
-            gitCommitAndPush(repoPath);
+            gitRepoHandlerService.gitCommitAndPushByCLI(repoPath, url, "branch", oauthCode);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        
-        // gitRepoHandlerService.main(repoPath, url, oauthCode);
 
-        // return ;
+        return url;
     }
 }
